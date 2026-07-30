@@ -25,7 +25,7 @@ One job: get brands and agencies to **book a call**. Every section funnels to th
 - **Scope nuance:** the no-fitness rule (§1) applies to Jelani's *personal bodybuilding content*, not to **commercial campaigns for fitness/wellness brands** (apparel shoots, juice product work) — those are client work and belong in the Work section.
 - **Sales background:** ~4 years at Koodo Mobile (Sales Rep + Store Manager). Angle: *a creative who understands commercial goals* — use one line, don't dwell.
 - **Existing work inventory (from his current carrd — see §4a):** editors reels (2020 + Part 2), cinematography reel, UGC vertical shorts, beauty/fashion photography set, Sportsnet piece, Camp Dreamwood recaps, "promise" short film, GFX/banner design.
-- **Additional portfolio placeholders:** Bioderma event recap, BuildApe content (assets pending from client).
+- **Additional portfolio placeholder:** Bioderma event recap (assets pending from client). ~~BuildApe~~ — dropped; Jelani is no longer with them. Do not reference BuildApe anywhere on the site.
 
 `[AWAITING CLIENT]` — LinkedIn About/Experience full text, confirmed client list, YouTube URLs/IDs for each work item below (all are on youtube.com/@jelaniwoodstv — titles listed in §4a), original photo exports, headshot, background reel. Build with placeholders; never ship lorem ipsum — write real draft copy and mark unconfirmed facts with `<!-- CONFIRM -->`.
 
@@ -101,13 +101,20 @@ Single long-scroll page. Section order and copy intent (Opus drafts final copy i
 7. **Work** (`#work`) — the centerpiece section, built from his real portfolio. One continuous dark gallery, sub-grouped with small gold-numbered subheads. Every video is a **facade card**: our own dark frame, poster thumbnail, title + client caption, subtle gold border on hover with slight (1.03) zoom; clicking swaps in a lazy `youtube-nocookie.com` iframe (`ui/LiteYouTube.tsx`). No raw embeds, no red YouTube chrome at rest.
    - **7.1 Featured** — full-width 16:9 card: *Sportsnet — "Duane Notice's Battle Back From Injury" (Black History Month)*. Eyebrow: `FEATURED · SPORTSNET`.
    - **7.2 Reels** — three 16:9 cards: Cinematography Reel · Editors Reel 2020 · Editors Reel Pt. 2. This row answers "can he shoot / can he cut" in one glance.
-   - **7.3 Event & recap work** — Camp Dreamwood weekly recap (+ Bioderma / BuildApe cards as *Coming soon* until assets land). Caption each with the turnaround story where known.
+   - **7.3 Event & recap work** — Camp Dreamwood weekly recap (+ Bioderma card as *Coming soon* until assets land). Caption each with the turnaround story where known.
    - **7.4 Brand campaigns & product** — from Studio Impetus: campaign reels (fitness-apparel shoots, lifestyle) + product photography (BeeVibe Juicery bottle work). Eyebrow: `CAMPAIGNS · STUDIO IMPETUS`. Mixed 16:9 video cards and square/4:5 photo tiles. `[AWAITING CLIENT]` original exports + client-name confirmations.
    - **7.5 Short-form / UGC** — horizontal row of 9:16 vertical cards (`ui/ShortsCard.tsx`), scroll-snap on mobile: the luxury short, cinematic short, "promise", travel/bridge short. This is the format influencer-marketing buyers are buying — label it `SHORT-FORM & UGC`.
    - **7.6 Photography** — beauty/fashion set (5 images from current site, re-exported at quality; `[AWAITING CLIENT]` originals) in an asymmetric masonry-style grid on `--ink`, generous whitespace, no borders; lightbox optional (skip if it threatens the perf budget).
    - Video sources: all on youtube.com/@jelaniwoodstv — exact IDs `[AWAITING CLIENT]`; wire cards to `content/site.ts` entries `{ id, title, client, kind: 'video'|'short'|'photo', ytId?, poster }` so IDs paste straight in.
    - Cut from current site (per §4a): Cover Letter video, gaming GFX banners.
-8. **CTA** — full-width closer on `--ink`: display-size "Have an event coming up?" + gold **Book a call** (Calendly link, `[AWAITING CLIENT]`, placeholder `#book`) + mailto `jelaniwoods@gmail.com`. Optional minimal form (name/email/message) via a free email-relay service (Formspree-class) per KC standard — no custom backend.
+8. **CTA — conversational card flow** (stakeholder decision: **no traditional form**). Full-width closer on `--ink`, display-size "Have an event coming up?" above a single centered card (`--surface`, hairline border, gold accents) that asks one question at a time:
+   - **Step 1** — "What do you need?" → four option chips: `Event recap` / `Photo coverage` / `Second shooter` / `Editing support`.
+   - **Step 2** — "When do you need it?" → chips: `This month` / `Next month` / `Just exploring`.
+   - **Step 3** — "Where can I reach you?" → single email input + optional one-line note + gold **Send it** button.
+   - Steps transition with a slide/fade (`motion` AnimatePresence, 300ms); gold progress dots; back affordance; card keeps fixed min-height (no CLS). Selections are chips, not radio buttons — tapping advances immediately.
+   - Submission: relay the three answers via a free email-relay service (Formspree-class) to `jelaniwoods@gmail.com`, with graceful mailto fallback (body prefilled from answers) if the relay fails. No custom backend. Keep the whole widget dependency-free beyond `motion`.
+   - Below the card, one quiet line: "Prefer email? jelaniwoods@gmail.com". Swap in Calendly link later if one arrives (`[AWAITING CLIENT]`).
+   - Fully keyboard-navigable; chips are buttons with visible focus rings; step changes announced via `aria-live="polite"`.
 9. **Footer** — wordmark, email, Instagram/LinkedIn links, "Toronto / GTA", year.
 
 ## 5. Stack & scaffold (KC ritual — run in order, don't re-derive)
@@ -167,11 +174,17 @@ public/fonts/  public/media/    # self-hosted woff2, video + posters
 - LinkedIn About/Experience text, confirmed client list → §4.3/§4.6 slots
 - YouTube video IDs for every §4.7 work item (titles known; channel: youtube.com/@jelaniwoodstv) → paste into `content/site.ts`
 - Original photo exports for the beauty set (screenshots are not shippable quality)
-- Background reel, headshot, Bioderma/BuildApe assets → drop-in swaps
-- Client sign-off on the two cuts: Cover Letter video + gaming GFX banners (§4a)
-- Studio Impetus campaign/product asset exports + client-name confirmations (is BeeVibe Juicery nameable? which apparel brand?)
+- Background reel, headshot, Bioderma assets → drop-in swaps
+- Studio Impetus campaign/product asset exports
 - Testimonial quotes from the Studio Impetus IG highlight, with permission to attribute
-- **Brand-relationship decision (ask Jelani):** does this site present JelaniWoodsTV alone with Studio Impetus as a credential (current spec), or should it cross-link/merge with Studio Impetus? Spec assumes the former; revisit copy if he wants the studio front-and-center.
+
+### Decisions locked (2026-07-30, stakeholder-confirmed — do not reopen)
+
+- **Brand framing:** site is JelaniWoodsTV; Studio Impetus appears as a founder credential, not the lead brand.
+- **CTA:** conversational card flow per §4.8 — explicitly *not* a traditional form.
+- **Cuts approved:** Cover Letter video and gaming GFX banners are off the site.
+- **Client naming:** name Sportsnet, Camp Dreamwood, BeeVibe Juicery, Visual Smugglers publicly for now — pending Jelani's final say; keep names easily removable (they live only in `content/site.ts`).
+- **BuildApe:** removed entirely (relationship ended).
 - Calendly (or booking) link → replaces `#book`
 - Domain (likely `jelaniwoods.tv` or similar) — not blocking; Railway URL for staging
 
