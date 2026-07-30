@@ -21,6 +21,8 @@ One job: get brands and agencies to **book a call**. Every section funnels to th
 - **Camp Dreamwood** — recurring weekly recap videos ("August Week 3 – 2021") — direct evidence of the *event-recap* service.
 - **JelaniWoodsTV** (self-employed) — social media marketing, lead gen, video editing, graphic design, photo retouching; photography across events, fashion, portraits, headshots, weddings. Positions himself as **Director of Photography — Storytelling | Production | Social Media Strategy** (current site hero; keep this identity).
 - **Toolset:** Adobe CC (Premiere Pro, Lightroom, Photoshop) + **DaVinci Resolve**, cinematography, color correction, camera operation.
+- **Studio Impetus** (@studioimpetus, "Impetus Social" — Toronto media creators) — **founded by Jelani**. Bio: "Compelling Campaigns That Capture YOUR Brand's Personality." Its grid (reviewed via screenshot 2026-07) shows brand-campaign reels, fitness-apparel campaign shoots, **product photography (BeeVibe Juicery)**, and lifestyle content — plus IG highlights for **Testimonials**, Q&A, and "The Code." Use "Founder of Studio Impetus" as a credibility line in About/Proof, and its campaign work in §4.7.
+- **Scope nuance:** the no-fitness rule (§1) applies to Jelani's *personal bodybuilding content*, not to **commercial campaigns for fitness/wellness brands** (apparel shoots, juice product work) — those are client work and belong in the Work section.
 - **Sales background:** ~4 years at Koodo Mobile (Sales Rep + Store Manager). Angle: *a creative who understands commercial goals* — use one line, don't dwell.
 - **Existing work inventory (from his current carrd — see §4a):** editors reels (2020 + Part 2), cinematography reel, UGC vertical shorts, beauty/fashion photography set, Sportsnet piece, Camp Dreamwood recaps, "promise" short film, GFX/banner design.
 - **Additional portfolio placeholders:** Bioderma event recap, BuildApe content (assets pending from client).
@@ -29,7 +31,7 @@ One job: get brands and agencies to **book a call**. Every section funnels to th
 
 ## 3. Design direction
 
-**References:** isou.ca — minimal, first-person, fullscreen **background video**, ambient animation, aesthetic-forward. @studioimpetus (IG) — cinematic content-studio energy. Target feel: **modern, clean, cinematic-dark** — big type, generous space, motion that feels expensive but restrained. Not a template look.
+**References:** isou.ca — minimal, first-person, fullscreen **background video**, ambient animation, aesthetic-forward. @studioimpetus (IG) — dark, campaign-driven content-studio energy; note this is **Jelani's own studio** (see §2), so its look is also brand continuity, not just inspiration. Target feel: **modern, clean, cinematic-dark** — big type, generous space, motion that feels expensive but restrained. Not a template look.
 
 ### Design tokens (client brand — black & gold; this is *not* the KC house brand)
 
@@ -95,13 +97,14 @@ Single long-scroll page. Section order and copy intent (Opus drafts final copy i
 3. **Marquee strip** — now has real names: `SPORTSNET · VISUAL SMUGGLERS · CAMP DREAMWOOD` + `[AWAITING CLIENT]` slots, interleaved with capability words (`EVENT RECAPS · SECOND SHOOTER · SAME-WEEK EDITS`), muted caps with gold separators.
 4. **Services** — 4 cards on `--surface`, hairline borders, gold numerals 01–04: Event video recaps · Photo coverage · Second shooting / overflow support · Quick-turnaround editing. Each: 2-line description + concrete turnaround promise.
 5. **About** — split layout: portrait (placeholder frame until headshot arrives) + short first-person bio built from §2. One sentence on the sales background as commercial fluency.
-6. **Proof / Experience** — vertical timeline or three stat-style entries: Visual Smugglers (PM & DoP), JelaniWoodsTV independent work, toolset line. Gold hairline connectors. `[AWAITING CLIENT]` slots for numbers/names.
+6. **Proof / Experience** — vertical timeline or stat-style entries: **Founder, Studio Impetus** (Toronto media-creator studio) · Visual Smugglers (PM & DoP) · JelaniWoodsTV independent work · toolset line. Gold hairline connectors. Below the timeline: 1–3 **testimonial pull-quotes** in italic serif-feel display type with gold quote marks — source: the Studio Impetus IG "Testimonials" highlight (`[AWAITING CLIENT]` exact quotes + attribution permission; omit the block entirely until real quotes land — never fabricate). `[AWAITING CLIENT]` slots for numbers/names.
 7. **Work** (`#work`) — the centerpiece section, built from his real portfolio. One continuous dark gallery, sub-grouped with small gold-numbered subheads. Every video is a **facade card**: our own dark frame, poster thumbnail, title + client caption, subtle gold border on hover with slight (1.03) zoom; clicking swaps in a lazy `youtube-nocookie.com` iframe (`ui/LiteYouTube.tsx`). No raw embeds, no red YouTube chrome at rest.
    - **7.1 Featured** — full-width 16:9 card: *Sportsnet — "Duane Notice's Battle Back From Injury" (Black History Month)*. Eyebrow: `FEATURED · SPORTSNET`.
    - **7.2 Reels** — three 16:9 cards: Cinematography Reel · Editors Reel 2020 · Editors Reel Pt. 2. This row answers "can he shoot / can he cut" in one glance.
    - **7.3 Event & recap work** — Camp Dreamwood weekly recap (+ Bioderma / BuildApe cards as *Coming soon* until assets land). Caption each with the turnaround story where known.
-   - **7.4 Short-form / UGC** — horizontal row of 9:16 vertical cards (`ui/ShortsCard.tsx`), scroll-snap on mobile: the luxury short, cinematic short, "promise", travel/bridge short. This is the format influencer-marketing buyers are buying — label it `SHORT-FORM & UGC`.
-   - **7.5 Photography** — beauty/fashion set (5 images from current site, re-exported at quality; `[AWAITING CLIENT]` originals) in an asymmetric masonry-style grid on `--ink`, generous whitespace, no borders; lightbox optional (skip if it threatens the perf budget).
+   - **7.4 Brand campaigns & product** — from Studio Impetus: campaign reels (fitness-apparel shoots, lifestyle) + product photography (BeeVibe Juicery bottle work). Eyebrow: `CAMPAIGNS · STUDIO IMPETUS`. Mixed 16:9 video cards and square/4:5 photo tiles. `[AWAITING CLIENT]` original exports + client-name confirmations.
+   - **7.5 Short-form / UGC** — horizontal row of 9:16 vertical cards (`ui/ShortsCard.tsx`), scroll-snap on mobile: the luxury short, cinematic short, "promise", travel/bridge short. This is the format influencer-marketing buyers are buying — label it `SHORT-FORM & UGC`.
+   - **7.6 Photography** — beauty/fashion set (5 images from current site, re-exported at quality; `[AWAITING CLIENT]` originals) in an asymmetric masonry-style grid on `--ink`, generous whitespace, no borders; lightbox optional (skip if it threatens the perf budget).
    - Video sources: all on youtube.com/@jelaniwoodstv — exact IDs `[AWAITING CLIENT]`; wire cards to `content/site.ts` entries `{ id, title, client, kind: 'video'|'short'|'photo', ytId?, poster }` so IDs paste straight in.
    - Cut from current site (per §4a): Cover Letter video, gaming GFX banners.
 8. **CTA** — full-width closer on `--ink`: display-size "Have an event coming up?" + gold **Book a call** (Calendly link, `[AWAITING CLIENT]`, placeholder `#book`) + mailto `jelaniwoods@gmail.com`. Optional minimal form (name/email/message) via a free email-relay service (Formspree-class) per KC standard — no custom backend.
@@ -166,6 +169,9 @@ public/fonts/  public/media/    # self-hosted woff2, video + posters
 - Original photo exports for the beauty set (screenshots are not shippable quality)
 - Background reel, headshot, Bioderma/BuildApe assets → drop-in swaps
 - Client sign-off on the two cuts: Cover Letter video + gaming GFX banners (§4a)
+- Studio Impetus campaign/product asset exports + client-name confirmations (is BeeVibe Juicery nameable? which apparel brand?)
+- Testimonial quotes from the Studio Impetus IG highlight, with permission to attribute
+- **Brand-relationship decision (ask Jelani):** does this site present JelaniWoodsTV alone with Studio Impetus as a credential (current spec), or should it cross-link/merge with Studio Impetus? Spec assumes the former; revisit copy if he wants the studio front-and-center.
 - Calendly (or booking) link → replaces `#book`
 - Domain (likely `jelaniwoods.tv` or similar) — not blocking; Railway URL for staging
 
