@@ -1,0 +1,157 @@
+import { test, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
+
+/** Scroll the page in instant jumps so every scroll-reveal fires. */
+async function revealAll(page: import('@playwright/test').Page) {
+  await page.evaluate(async () => {
+    document.documentElement.style.scrollBehavior = 'auto'
+    const step = Math.round(window.innerHeight * 0.6)
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo({ top: y, behavior: 'instant' })
+      await new Promise((r) => setTimeout(r, 160))
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  })
+  await page.waitForTimeout(900)
+}
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/')
+})
+
+test('prerendered markup hydrates without console errors', async ({ page }) => {
+  const errors: string[] = []
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') errors.push(msg.text())
+  })
+  page.on('pageerror', (err) => errors.push(err.message))
+
+  await page.goto('/')
+  await page.waitForTimeout(1500)
+
+  expect(errors.filter((e) => /hydrat|did not match|mismatch/i.test(e))).toEqual([])
+  expect(errors).toEqual([])
+})
+
+test('the page ships prerendered, not as an empty shell', async ({ request }) => {
+  const html = await (await request.get('/')).text()
+
+  // The headline is split one <span> per word for the entrance, so match a
+  // word rather than the whole sentence.
+  expect(html).toContain('Fast-turnaround')
+  expect(html).toContain('Duane Notice')
+  expect(html).toContain('Have an event coming up?')
+  expect(html).not.toContain('<div id="root"></div>')
+
+  // CSS is folded into the document, so no render-blocking stylesheet link.
+  expect(html).not.toMatch(/<link rel="stylesheet"/)
+})
+
+test('hero renders the headline and both calls to action', async ({ page }) => {
+  // Exact match, not `toContainText`: the headline is split per word for the
+  // entrance animation, and a collapsed separator silently glues words
+  // together ("brandevents.") while still passing a loose assertion.
+  expect((await page.getByRole('heading', { level: 1 }).innerText()).replace(/\s+/g, ' ')).toBe(
+    'Fast-turnaround creative for brand events.',
+  )
+  await expect(page.getByRole('link', { name: 'Book a call' }).first()).toHaveAttribute(
+    'href',
+    '#contact',
+  )
+  await expect(page.getByRole('link', { name: /See the work/ })).toHaveAttribute('href', '#work')
+})
+
+test('every section is present and visible after scrolling', async ({ page }) => {
+  await revealAll(page)
+
+  for (const id of ['work', 'services', 'about', 'contact']) {
+    await expect(page.locator(`#${id}`)).toBeVisible()
+  }
+
+  // Nothing may be left stranded at opacity 0 by the reveal animation.
+  const dim = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('h2, h3'))
+      .filter((h) => (h as HTMLElement).getBoundingClientRect().width > 0)
+      .map((h) => {
+        let node: HTMLElement | null = h as HTMLElement
+        let min = 1
+        while (node && node !== document.body) {
+          min = Math.min(min, parseFloat(getComputedStyle(node).opacity))
+          node = node.parentElement
+        }
+        return { text: h.textContent?.slice(0, 40) ?? '', opacity: min }
+      })
+      .filter((r) => r.opacity < 0.9),
+  )
+  expect(dim).toEqual([])
+})
+
+test('the work gallery lists the real credits', async ({ page }) => {
+  await revealAll(page)
+  const work = page.locator('#work')
+
+  await expect(work.getByText('Featured · Sportsnet')).toBeVisible()
+  await expect(work.getByRole('heading', { name: "Duane Notice's Battle Back From Injury" })).toBeVisible()
+  await expect(work.getByRole('heading', { name: 'Camp Dreamwood — Weekly Recap' })).toBeVisible()
+  await expect(work.getByRole('heading', { name: 'Cinematography Reel' })).toBeVisible()
+  await expect(work.getByRole('heading', { name: 'BeeVibe Juicery — Product' })).toBeVisible()
+
+  // Cut by client decision — must never reappear.
+  await expect(page.getByText(/BuildApe/i)).toHaveCount(0)
+  await expect(page.getByText(/Cover Letter/i)).toHaveCount(0)
+})
+
+test('no third-party embed loads until a card is clicked', async ({ page }) => {
+  await revealAll(page)
+  expect(await page.locator('iframe').count()).toBe(0)
+})
+
+test('the CTA card walks through its three steps and keeps a stable height', async ({ page }) => {
+  const card = page.locator('#contact .card')
+  await card.scrollIntoViewIfNeeded()
+  await page.waitForTimeout(700)
+
+  const startHeight = (await card.boundingBox())?.height ?? 0
+
+  await expect(page.getByRole('heading', { name: 'What do you need?' })).toBeVisible()
+  await page.getByRole('button', { name: 'Event recap' }).click()
+
+  await expect(page.getByRole('heading', { name: 'When do you need it?' })).toBeVisible()
+  await page.getByRole('button', { name: 'This month' }).click()
+
+  await expect(page.getByRole('heading', { name: 'Where can I reach you?' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Send it' })).toBeVisible()
+
+  const endHeight = (await card.boundingBox())?.height ?? 0
+  expect(Math.abs(endHeight - startHeight)).toBeLessThanOrEqual(2)
+
+  // Back returns to the previous question with the answer still selected.
+  await page.getByRole('button', { name: '← Back' }).click()
+  await expect(page.getByRole('heading', { name: 'When do you need it?' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'This month' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+})
+
+test('page never scrolls horizontally', async ({ page }) => {
+  await revealAll(page)
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  )
+  expect(overflow).toBeLessThanOrEqual(0)
+})
+
+test('no critical or serious accessibility violations', async ({ page }) => {
+  await revealAll(page)
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze()
+
+  const blocking = results.violations.filter(
+    (v) => v.impact === 'critical' || v.impact === 'serious',
+  )
+  expect(
+    blocking.map((v) => `${v.impact}: ${v.id} — ${v.nodes.length} node(s)`),
+  ).toEqual([])
+})

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="glow" cx="18%" cy="12%" r="70%">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0A0A0B"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <text x="80" y="150" font-family="Inter, Helvetica, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="4.5" fill="#D4AF37">JELANIWOODSTV</text>
+  <rect x="80" y="180" width="150" height="2" fill="url(#rule)"/>
+
+  <text x="80" y="300" font-family="Inter, Helvetica, Arial, sans-serif" font-size="72" font-weight="800" letter-spacing="-2.6" fill="#F5F2EA">Fast-turnaround</text>
+  <text x="80" y="382" font-family="Inter, Helvetica, Arial, sans-serif" font-size="72" font-weight="800" letter-spacing="-2.6" fill="#F5F2EA">creative for</text>
+  <text x="80" y="464" font-family="Inter, Helvetica, Arial, sans-serif" font-size="72" font-weight="800" letter-spacing="-2.6" fill="#F5F2EA">brand events.</text>
+
+  <text x="80" y="548" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24" font-weight="400" fill="#9A968C">Director of Photography · Toronto / GTA</text>
+</svg>
