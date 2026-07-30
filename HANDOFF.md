@@ -16,13 +16,16 @@ One job: get brands and agencies to **book a call**. Every section funnels to th
 
 ## 2. Verified proof points (use these; don't invent)
 
-- **Visual Smugglers** (Toronto production agency, King St W) — Project Manager & Director of Photography. Strongest anchor; the agency does social content, event video, brand promos — exactly what Jelani sells.
-- **JelaniWoodsTV** (self-employed) — social media marketing, lead gen, video editing, graphic design, photo retouching; photography across events, fashion, portraits, headshots, weddings.
-- **Toolset:** Adobe Premiere Pro, Lightroom, Photoshop, cinematography, color correction, camera operation.
+- **Sportsnet** — "Duane Notice's Battle Back From Injury | Black History Month" (broadcast-brand credit; featured on his current site). **Lead proof point** — a national broadcaster beats everything else on the page.
+- **Visual Smugglers** (Toronto production agency, King St W) — Project Manager & Director of Photography. The agency does social content, event video, brand promos — exactly what Jelani sells.
+- **Camp Dreamwood** — recurring weekly recap videos ("August Week 3 – 2021") — direct evidence of the *event-recap* service.
+- **JelaniWoodsTV** (self-employed) — social media marketing, lead gen, video editing, graphic design, photo retouching; photography across events, fashion, portraits, headshots, weddings. Positions himself as **Director of Photography — Storytelling | Production | Social Media Strategy** (current site hero; keep this identity).
+- **Toolset:** Adobe CC (Premiere Pro, Lightroom, Photoshop) + **DaVinci Resolve**, cinematography, color correction, camera operation.
 - **Sales background:** ~4 years at Koodo Mobile (Sales Rep + Store Manager). Angle: *a creative who understands commercial goals* — use one line, don't dwell.
-- **Portfolio placeholders:** Bioderma event recap, BuildApe content (assets pending from client).
+- **Existing work inventory (from his current carrd — see §4a):** editors reels (2020 + Part 2), cinematography reel, UGC vertical shorts, beauty/fashion photography set, Sportsnet piece, Camp Dreamwood recaps, "promise" short film, GFX/banner design.
+- **Additional portfolio placeholders:** Bioderma event recap, BuildApe content (assets pending from client).
 
-`[AWAITING CLIENT]` — LinkedIn About/Experience full text, client/brand list, final portfolio links, headshot, background reel. Build with placeholders; never ship lorem ipsum — write real draft copy and mark unconfirmed facts with `<!-- CONFIRM -->`.
+`[AWAITING CLIENT]` — LinkedIn About/Experience full text, confirmed client list, YouTube URLs/IDs for each work item below (all are on youtube.com/@jelaniwoodstv — titles listed in §4a), original photo exports, headshot, background reel. Build with placeholders; never ship lorem ipsum — write real draft copy and mark unconfirmed facts with `<!-- CONFIRM -->`.
 
 ## 3. Design direction
 
@@ -68,17 +71,39 @@ Library: **`motion` package (`motion/react`)** — NOT framer-motion (KC standar
 - Until the client's reel arrives: ship `/public/media/reel-placeholder.mp4` (dark abstract/grain loop — generate or use a licensed stock clip; do NOT rip content) and keep the swap a one-file replacement.
 - Lazy-init: set `preload="none"`, attach `src` after first paint; render poster immediately (LCP is the poster/headline, never the video).
 
+## 4a. Current site audit — what "more polished" means
+
+His live site (jelaniwoodstv.carrd.co, reviewed via screenshots 2026-07) is a dark Carrd one-pager: hero ("JELANI-ISSA WOODS / Director of Photography / Storytelling | Production | Social Media Strategy"), anchor pills (UGC, Cover Letter, Video Editing, Beauty, GFX Design), then stacked raw YouTube embeds, a beauty-photo grid on a jarring **white** background, gaming GFX banners, and a "Lets chat." social-icon footer.
+
+**Keep** (it's working): dark theme, wide-tracked hero typography, category-based work organization, real embedded work, the DoP identity line.
+
+**Fix** (the polish gap — each is a build requirement):
+1. **Raw YouTube embeds everywhere** → replace with styled facade cards (§4.7): our own poster frames, hover states, gold accents; player loads only on click. Kills the wall-of-red-play-buttons look and the iframe performance tax.
+2. **White beauty section breaks the theme** → one continuous dark system; photography sits on `--ink` with generous gutters, like a gallery wall.
+3. **No hierarchy** → Sportsnet is buried mid-page. The strongest credit leads the Work section as a featured wide card.
+4. **No CTA / no funnel** → current site has zero ask. Every section now funnels to **Book a call**.
+5. **Job-seeker artifacts** → "Cover Letter" video/pill reads as résumé, not vendor. **Cut from this site** (it can live on LinkedIn).
+6. **Off-target content** → gaming GFX banners ("DefaultADC" Twitch-style art) don't speak to agency buyers. **Cut by default**; the "Stills & Motion — Dreams Become Reality" poster may survive inside the photography set if it fits the grid. Flag for client sign-off.
+7. **Carrd template tells** ("Made with Carrd", default type, pill buttons) → gone by nature of the custom build.
+
 ## 4. Page structure & copy skeleton
 
 Single long-scroll page. Section order and copy intent (Opus drafts final copy in the tone above; hero one-liner is fixed):
 
 1. **Nav** — fixed, transparent → `--surface` scrim after 40px scroll. Left: "JELANIWOODSTV" wordmark (text, Clash Display). Right: anchor links (Work, Services, About) + gold **Book a call** button.
-2. **Hero** — fullscreen video bg. Eyebrow: `Video · Photo · GTA`. H1: **"Fast-turnaround creative for brand events."** Sub: one line naming the buyer ("I help brands and agencies turn events into content — recaps delivered while the moment still matters."). Primary CTA **Book a call**, secondary ghost link **See work ↓**.
-3. **Marquee strip** — client/brand names when confirmed; until then capability words (`EVENT RECAPS · SECOND SHOOTER · SAME-WEEK EDITS · …`) in muted caps with gold separators.
+2. **Hero** — fullscreen video bg. Eyebrow: `JELANI-ISSA WOODS · DIRECTOR OF PHOTOGRAPHY · GTA` (keeps his current-site identity). H1: **"Fast-turnaround creative for brand events."** Sub: one line naming the buyer ("I help brands and agencies turn events into content — recaps delivered while the moment still matters."). Primary CTA **Book a call**, secondary ghost link **See work ↓**.
+3. **Marquee strip** — now has real names: `SPORTSNET · VISUAL SMUGGLERS · CAMP DREAMWOOD` + `[AWAITING CLIENT]` slots, interleaved with capability words (`EVENT RECAPS · SECOND SHOOTER · SAME-WEEK EDITS`), muted caps with gold separators.
 4. **Services** — 4 cards on `--surface`, hairline borders, gold numerals 01–04: Event video recaps · Photo coverage · Second shooting / overflow support · Quick-turnaround editing. Each: 2-line description + concrete turnaround promise.
 5. **About** — split layout: portrait (placeholder frame until headshot arrives) + short first-person bio built from §2. One sentence on the sales background as commercial fluency.
 6. **Proof / Experience** — vertical timeline or three stat-style entries: Visual Smugglers (PM & DoP), JelaniWoodsTV independent work, toolset line. Gold hairline connectors. `[AWAITING CLIENT]` slots for numbers/names.
-7. **Portfolio teaser** — 2–3 wide cards (16:9, `--surface`, poster images): "Bioderma — event recap" and "BuildApe — content" marked *Coming soon*; hover: slight zoom + gold border. Built so real embeds/links drop in later.
+7. **Work** (`#work`) — the centerpiece section, built from his real portfolio. One continuous dark gallery, sub-grouped with small gold-numbered subheads. Every video is a **facade card**: our own dark frame, poster thumbnail, title + client caption, subtle gold border on hover with slight (1.03) zoom; clicking swaps in a lazy `youtube-nocookie.com` iframe (`ui/LiteYouTube.tsx`). No raw embeds, no red YouTube chrome at rest.
+   - **7.1 Featured** — full-width 16:9 card: *Sportsnet — "Duane Notice's Battle Back From Injury" (Black History Month)*. Eyebrow: `FEATURED · SPORTSNET`.
+   - **7.2 Reels** — three 16:9 cards: Cinematography Reel · Editors Reel 2020 · Editors Reel Pt. 2. This row answers "can he shoot / can he cut" in one glance.
+   - **7.3 Event & recap work** — Camp Dreamwood weekly recap (+ Bioderma / BuildApe cards as *Coming soon* until assets land). Caption each with the turnaround story where known.
+   - **7.4 Short-form / UGC** — horizontal row of 9:16 vertical cards (`ui/ShortsCard.tsx`), scroll-snap on mobile: the luxury short, cinematic short, "promise", travel/bridge short. This is the format influencer-marketing buyers are buying — label it `SHORT-FORM & UGC`.
+   - **7.5 Photography** — beauty/fashion set (5 images from current site, re-exported at quality; `[AWAITING CLIENT]` originals) in an asymmetric masonry-style grid on `--ink`, generous whitespace, no borders; lightbox optional (skip if it threatens the perf budget).
+   - Video sources: all on youtube.com/@jelaniwoodstv — exact IDs `[AWAITING CLIENT]`; wire cards to `content/site.ts` entries `{ id, title, client, kind: 'video'|'short'|'photo', ytId?, poster }` so IDs paste straight in.
+   - Cut from current site (per §4a): Cover Letter video, gaming GFX banners.
 8. **CTA** — full-width closer on `--ink`: display-size "Have an event coming up?" + gold **Book a call** (Calendly link, `[AWAITING CLIENT]`, placeholder `#book`) + mailto `jelaniwoods@gmail.com`. Optional minimal form (name/email/message) via a free email-relay service (Formspree-class) per KC standard — no custom backend.
 9. **Footer** — wordmark, email, Instagram/LinkedIn links, "Toronto / GTA", year.
 
@@ -103,9 +128,11 @@ src/
   styles/index.css              # tokens, @font-face, base
   components/
     Nav.tsx  Hero.tsx  Marquee.tsx  Services.tsx  About.tsx
-    Proof.tsx  Portfolio.tsx  CtaSection.tsx  Footer.tsx
+    Proof.tsx  Work.tsx  CtaSection.tsx  Footer.tsx
     ui/Reveal.tsx               # shared scroll-reveal wrapper
     ui/GoldButton.tsx
+    ui/LiteYouTube.tsx          # facade card → lazy nocookie iframe on click
+    ui/ShortsCard.tsx           # 9:16 vertical variant for UGC row
   content/site.ts               # ALL copy + links in one typed object
 server/index.ts                 # Express: serve dist/, SPA fallback
 public/fonts/  public/media/    # self-hosted woff2, video + posters
@@ -135,12 +162,15 @@ public/fonts/  public/media/    # self-hosted woff2, video + posters
 ## 8. Open items (client-blocked, do not wait on them to build)
 
 - LinkedIn About/Experience text, confirmed client list → §4.3/§4.6 slots
+- YouTube video IDs for every §4.7 work item (titles known; channel: youtube.com/@jelaniwoodstv) → paste into `content/site.ts`
+- Original photo exports for the beauty set (screenshots are not shippable quality)
 - Background reel, headshot, Bioderma/BuildApe assets → drop-in swaps
+- Client sign-off on the two cuts: Cover Letter video + gaming GFX banners (§4a)
 - Calendly (or booking) link → replaces `#book`
 - Domain (likely `jelaniwoods.tv` or similar) — not blocking; Railway URL for staging
 
 ## 9. Research notes (context for the builder)
 
-- isou.ca and the client's current carrd (jelaniwoodstv.carrd.co) were **not directly fetchable** from this environment (network policy); direction above is from stakeholder description: fullscreen bg video, ambient animation, minimal first-person structure.
+- isou.ca was **not directly fetchable** from this environment (network policy); its direction is from stakeholder description: fullscreen bg video, ambient animation, minimal first-person structure. The client's current carrd **was reviewed via full-page screenshots (2026-07)** — §4a and the §4.7 work inventory come from that review.
 - Client's public social presence (TikTok "Gym Edits", YouTube "Road to Pro") is fitness-branded — reinforcing why this page must stand alone as the commercial identity and why fitness content is excluded by client decision.
 - Visual Smugglers verified as a real Toronto production agency (visualsmugglers.com) — safe to name as experience, pending client confirmation of exact title/dates.
