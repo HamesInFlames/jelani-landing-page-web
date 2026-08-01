@@ -202,3 +202,21 @@ public/fonts/  public/media/    # self-hosted woff2, video + posters
 - isou.ca was **not directly fetchable** from this environment (network policy); its direction is from stakeholder description: fullscreen bg video, ambient animation, minimal first-person structure. The client's current carrd **was reviewed via full-page screenshots (2026-07)** — §4a and the §4.7 work inventory come from that review.
 - Client's public social presence (TikTok "Gym Edits", YouTube "Road to Pro") is fitness-branded — reinforcing why this page must stand alone as the commercial identity and why fitness content is excluded by client decision.
 - Visual Smugglers verified as a real Toronto production agency (visualsmugglers.com) — safe to name as experience, pending client confirmation of exact title/dates.
+
+## 10. Phase 2 — asset integration plan (from Jelani's Discord drop, 2026-07-31)
+
+Jelani shared Dropbox folders + context via Discord (reviewed as screenshots; Dropbox itself is blocked from this environment — files must be re-uploaded into the session or committed to the repo by James).
+
+**New verified client intel:**
+- **Socliq** — agency client; "Socliq Live" **Bioderma** event footage exists (`socliq live bioderma color audio blend.mov`). Bioderma card becomes real work, credited `Bioderma · with Socliq`.
+- **Kilani** — brand; the "Valentines Variation" PDF is his **post-payment creative-brief process example** — evidence for a Process section.
+- **Soluna** — `soluna youtube test.mp4`; Jelani: "can be shortened and reused" → hero-reel candidate.
+- **Elite Wedding Productions** — wedding portfolio folder. Jelani: weddings = long-term revenue, booking *next* summer.
+- **Jeff Gloria (Glorious Athletica)** — athletic-branding content Jelani owns outright (client never paid; he confirmed ownership). Visuals usable; whether to *name* them needs his call.
+- **Pricing** exists (voice memo, not yet transcribed) + a standing offer: **video + photo bundle = no discount, but a complimentary BTS film** "for brand transparency."
+
+**2A — buildable now (no files needed):** update `content/site.ts` credits (Bioderma real, add Socliq/Kilani/Soluna to marquee + campaigns group); add a **Process** section (Book a call → Creative brief → Shoot day → Fast delivery, with the brief step as the differentiator); fold the BTS-bundle offer into Services/CTA copy; optionally add "Video + Photo bundle" as a CTA step-1 chip.
+
+**2B — needs uploads:** hero reel (trim/compress Soluna or Bioderma footage to <4MB loop + poster — if ffmpeg is unavailable in-session, James runs the documented command locally and uploads the small outputs); poster stills for every work card; photography-grid images from the folders; pricing numbers once the memo is transcribed.
+
+**2C — decisions for Jelani (do not guess):** name Glorious Athletica publicly or use visuals uncredited; weddings on this agency-facing site (even as a footnote) or kept separate; publish pricing vs. keep quote-only (if published, always anchor: standard rate beside current rate).
