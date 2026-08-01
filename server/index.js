@@ -33,6 +33,8 @@ app.get('/healthz', (_req, res) => res.status(200).send('ok'))
 
 app.get('*', (_req, res) => res.sendFile(path.join(dist, 'index.html')))
 
-app.listen(port, () => {
+// Bind every interface — a container's health check reaches the process from
+// outside, so listening only on loopback would fail the deploy.
+app.listen(port, '0.0.0.0', () => {
   console.log(`JelaniWoodsTV site listening on :${port}`)
 })
