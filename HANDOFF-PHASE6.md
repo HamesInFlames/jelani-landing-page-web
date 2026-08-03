@@ -7,9 +7,10 @@ Letter warning — both still binding), `HANDOFF.md` (brief, locked
 decisions), `HANDOFF-PHASE3.md` §1 (local Windows environment).
 **Prime directive:** integrate, don't redesign. Gates hold.
 
-This phase has **two independent halves**. §2 is buildable right now. §3 is
-blocked on four files landing on disk — **do not let it hold up §2.** Ship
-the reels, then come back for the beauty set.
+This phase has **two halves and both are buildable now.** §2 wires the three
+reels; §3 adds the beauty set, whose source files have been located and
+staged (§3.1). Build §2 first — it is the higher-value fix — but there is
+no longer a blocker on either.
 
 ---
 
@@ -18,9 +19,10 @@ the reels, then come back for the beauty set.
 - **Three YouTube URLs** — these are exactly the three reels Phase 5 §5
   called "the last video gap." Resolving them closes the Work section's
   video coverage completely.
-- **Four beauty/editorial photographs**, supplied as chat attachments. They
-  are the long-pending "original photo exports for the beauty set" open
-  since Phase 1 §8. **They are not on disk yet** — see §3.1.
+- **Four beauty/editorial photographs** — the long-pending "original photo
+  exports for the beauty set", open since Phase 1 §8. Located in
+  `Downloads` and staged for the build (§3.1), at chat resolution rather
+  than full-size exports.
 
 ## 2. The reels — buildable now
 
@@ -62,35 +64,45 @@ Sportsnet feature, which is the weakest moment on the page. After this,
 every card in the Reels row is live and every video item in the Work
 section except `soluna` and `bioderma` is playable.
 
-## 3. The beauty set — blocked on files
+## 3. The beauty set — sources staged
 
-### 3.1 ⚠️ James: the four images are not on disk
+### 3.1 Files located and staged — with one caveat
 
-They came through chat as attachments and exist nowhere on the filesystem
-(searched Downloads, Desktop, Pictures, and the project tree). Opus cannot
-build with them until they land.
+The four images were in `Downloads` under hash names. They are now staged,
+identified, and renamed in
+`C:\Users\xoxok\Projects\Jelani Woods Web\Beauty Set\` (outside the repo,
+beside the other asset sources):
 
-**A folder is ready:** `C:\Users\xoxok\Projects\Jelani Woods Web\Beauty Set\`
-(created, empty, sits beside the other source folders and outside the repo
-— consistent with every other asset source).
+| Staged file | Was | Content |
+|---|---|---|
+| `01-editorial-chair.jpg` | `a21660b9.jpg` | B&W, woman reclining on a curved sculptural chair |
+| `02-golden-hour.jpg` | `127e3f6c.jpg` | Colour, blonde woman outdoors, polka-dot top, dappled light |
+| `03-beauty-studio.jpg` | `f8255b1c.jpg` | B&W, woman with hair wrapped in a towel |
+| `04-duo-portrait.jpg` | `c7803692.jpg` | Colour, two women overhead, head to head |
 
-Save the four files there at the **highest resolution available** — the
-originals from Lightroom, not chat-sized copies. Naming does not matter;
-the pipeline sorts and maps them. If higher-resolution originals exist,
-use those: the chat copies are ~500px wide, which is **below** what the
-gallery needs (900w) and would ship visibly soft.
+**Caveat — these are chat-sized copies, not Lightroom originals: every one
+is 503×630.** That is genuinely fine for the four-across layout in §3.3
+and a gift on mobile, but it is tight for a desktop retina render (see
+§3.4). Build with them; they are good enough to ship. If Jelani sends
+full-size exports later, dropping them into the same folder and re-running
+the script is the whole upgrade — no code changes.
 
 ### 3.2 What the four images are
 
 Matching them against the placeholder titles that lived in `site.ts` before
 Phase 3 replaced them, these are four of the original five beauty images:
 
-| # | Description | Register | Suggested title |
-|---|---|---|---|
-| 1 | Woman reclining on a curved sculptural chair, interior, monochrome | B&W editorial | `Editorial — form and light` |
-| 2 | Blonde woman outdoors in a polka-dot top, dappled natural light | Colour portrait | `Golden hour portrait` |
-| 3 | Woman with hair wrapped in a towel, clean beauty lighting, monochrome | B&W beauty | `Beauty — studio` |
-| 4 | Two women photographed from above, head to head | Colour duo portrait | `Duo portrait` |
+| Staged file | Register | Suggested title |
+|---|---|---|
+| `01-editorial-chair.jpg` | B&W editorial | `Editorial — form and light` |
+| `02-golden-hour.jpg` | Colour portrait | `Golden hour portrait` |
+| `03-beauty-studio.jpg` | B&W beauty | `Beauty — studio` |
+| `04-duo-portrait.jpg` | Colour duo portrait | `Duo portrait` |
+
+The staged order is also the **display order**, and it is deliberate: it
+alternates monochrome and colour (B&W → colour → B&W → colour) so the row
+reads as a considered strip rather than two sets bolted together. Verify
+it by eye and change it if something better presents itself.
 
 The fifth original (`Editorial — white series`) was **not** supplied — do
 not invent a fifth slot. Four is the set.
@@ -129,12 +141,25 @@ row is barely taller than one tile, so drift would either be invisible or
 would just shove tiles out of alignment. A clean contact-strip row is the
 right form for four images.
 
-### 3.4 Processing
+### 3.4 Processing — do not upscale
 
 Extend `scripts/media/build-stills.mjs` with a `BEAUTY` block (follow the
 existing curation-comment style — say *why*, not just *what*):
-- `sharp` → 4:5 cover → **900w** WebP q80 → `public/media/photos/beauty-0N.webp`
-- ≤300 KB each (`npm run assets:check` enforces it)
+
+- `sharp` → 4:5 cover → **`withoutEnlargement: true`** → WebP q82 →
+  `public/media/photos/beauty-0N.webp`, in the staged file order above.
+- **Target 500w, not the 900w used by the parallax wall.** The sources are
+  503px wide; asking sharp for 900 would upscale, which adds bytes and
+  softness and buys nothing. `withoutEnlargement` makes that a guarantee
+  rather than an intention, and keeps the script correct if full-size
+  originals replace these later.
+- The maths: at four across on a 1248px shell the tiles land near 297 CSS
+  px, so 503px covers 1x comfortably and lands a little under a 2x render.
+  Slight softness on a desktop retina screen is the known, accepted cost —
+  it is a secondary gallery row, and the alternative is shipping nothing.
+  Do not try to sharpen or upscale your way out of it.
+- ≤300 KB each (`npm run assets:check` enforces it — these will land far
+  under).
 - Two of the four are monochrome; do not colour-correct or "unify" them.
   The B&W/colour mix is the range being demonstrated.
 
@@ -169,9 +194,8 @@ Extend `tests/smoke.spec.ts`:
 ## 6. Build order
 
 1. **Reels first** (§2) — thumbs, `site.ts`, tests, gates. Commit.
-2. Beauty set (§3) **only once files are in `Beauty Set\`**. If the folder
-   is still empty, ship step 1 and report the block. Do not stub, do not
-   downscale the chat copies into place.
+2. Beauty set (§3) — sources are staged in `Beauty Set\`; extend the stills
+   script, add the group and its layout case, tests, gates. Commit.
 3. Push to `claude/jelanitv-sales-website-lfqi04`; screenshots + Lighthouse
    to the engineering owner.
 
@@ -179,7 +203,7 @@ Extend `tests/smoke.spec.ts`:
 
 | # | Item | State |
 |---|---|---|
-| 1 | Four beauty originals into `Beauty Set\` at full resolution | **James — blocks §3** |
+| 1 | Full-size Lightroom exports of the four beauty images | **Nice-to-have, not blocking.** Staged copies are 503×630 and ship fine; originals would sharpen the desktop retina render. Drop into `Beauty Set\` and re-run the script |
 | 2 | Fifth beauty image (`Editorial — white series`) | Not supplied; four is the set |
 | 3 | Model-release comfort for the four portraits | All four were already public on his carrd site; flag to Jelani only if he wants them off |
 | 4 | Soluna / Bioderma public links | Posters ship; `ytId` when available |
