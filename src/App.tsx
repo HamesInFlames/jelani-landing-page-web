@@ -3,6 +3,7 @@ import { Hero } from './components/Hero'
 import { Marquee } from './components/Marquee'
 import { Services } from './components/Services'
 import { About } from './components/About'
+import { Pricing } from './components/Pricing'
 import { Process } from './components/Process'
 import { Proof } from './components/Proof'
 import { Work } from './components/Work'
@@ -33,6 +34,7 @@ export default function App() {
         <About />
         <Process />
         <Proof />
+        <Pricing />
         <CtaSection />
       </main>
 

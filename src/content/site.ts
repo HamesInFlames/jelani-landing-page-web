@@ -29,7 +29,7 @@ export interface WorkGroup {
   eyebrow: string
   title: string
   blurb?: string
-  layout: 'featured' | 'grid' | 'row' | 'gallery'
+  layout: 'featured' | 'grid' | 'row' | 'gallery' | 'beauty'
   items: WorkItem[]
 }
 
@@ -147,7 +147,8 @@ export const site = {
       {
         n: '04',
         title: 'Quick-turnaround editing',
-        body: 'Send me the footage and get back a finished cut: story, pacing, sound, colour. Vertical and horizontal versions from one edit.',
+        // CONFIRM: package pointer reflects the 2026-08-02 pricing drop.
+        body: 'Send me the footage and get back a finished cut: story, pacing, sound, colour. Vertical and horizontal versions from one edit. Fixed packages below — ten or twenty edits, $100 each.',
         promise: 'Same-week delivery',
       },
     ],
@@ -237,8 +238,8 @@ export const site = {
             title: "Duane Notice's Battle Back From Injury",
             client: 'Sportsnet',
             kind: 'video',
-            ytId: null,
-            poster: null,
+            ytId: 'CavSj2reqa4',
+            poster: '/media/yt-CavSj2reqa4.webp',
             note: 'Black History Month feature',
           },
         ],
@@ -253,24 +254,26 @@ export const site = {
             id: 'cinematography-reel',
             title: 'Cinematography Reel',
             kind: 'video',
-            ytId: null,
-            poster: null,
+            ytId: '0BmqVLkam-g',
+            poster: '/media/yt-0BmqVLkam-g.webp',
             note: 'Camera work across events, brand, and lifestyle',
           },
           {
             id: 'editors-reel-2020',
             title: 'Editors Reel 2020',
             kind: 'video',
-            ytId: null,
-            poster: null,
+            ytId: '42abljCvlbc',
+            poster: '/media/yt-42abljCvlbc.webp',
             note: 'Pacing, sound design, colour',
           },
           {
+            // Titled "Editors Reel | ANOTHA ONE" on YouTube; the site keeps
+            // "Part 2" — clearer to a buyer scanning a row of three reels.
             id: 'editors-reel-pt2',
             title: 'Editors Reel — Part 2',
             kind: 'video',
-            ytId: null,
-            poster: null,
+            ytId: 'rTFInFnpJa8',
+            poster: '/media/yt-rTFInFnpJa8.webp',
             note: 'Second selection of edit work',
           },
         ],
@@ -305,8 +308,8 @@ export const site = {
             title: 'Camp Dreamwood — Weekly Recap',
             client: 'Camp Dreamwood',
             kind: 'video',
-            ytId: null,
-            poster: null,
+            ytId: 'MhNHciOVE1w',
+            poster: '/media/yt-MhNHciOVE1w.webp',
             note: 'Recurring weekly recap series, summer 2021',
           },
         ],
@@ -358,31 +361,31 @@ export const site = {
         items: [
           {
             id: 'luxury-short',
-            title: 'Luxury',
+            title: 'Luxury Villa UGC',
             kind: 'short',
-            ytId: null,
-            poster: null,
+            ytId: 'agP4vz_HjYw',
+            poster: '/media/yt-agP4vz_HjYw.webp',
           },
           {
             id: 'cinematic-short',
             title: 'Cinematic Short',
             kind: 'short',
-            ytId: null,
-            poster: null,
+            ytId: 'IRGQXQKWEek',
+            poster: '/media/yt-IRGQXQKWEek.webp',
           },
           {
             id: 'promise',
             title: 'Promise',
             kind: 'short',
-            ytId: null,
-            poster: null,
+            ytId: 'LTD6Zqn1vq0',
+            poster: '/media/yt-LTD6Zqn1vq0.webp',
           },
           {
             id: 'star-v',
-            title: 'Star V',
+            title: 'Star Villas Costa Rica',
             kind: 'short',
-            ytId: null,
-            poster: null,
+            ytId: 'VdbsVKasgBI',
+            poster: '/media/yt-VdbsVKasgBI.webp',
           },
         ],
       },
@@ -408,6 +411,22 @@ export const site = {
           { id: 'photo-8', title: 'Event coverage — warm light', kind: 'photo', ytId: null, poster: '/media/photos/photo-08.webp' },
           { id: 'photo-9', title: 'Activation stills — the room at work', kind: 'photo', ytId: null, poster: '/media/photos/photo-09.webp' },
           { id: 'photo-10', title: 'Event coverage — closing energy', kind: 'photo', ytId: null, poster: '/media/photos/photo-10.webp' },
+        ],
+      },
+      {
+        id: 'beauty',
+        eyebrow: 'Beauty & editorial',
+        title: 'Portraiture, when the brief is the face.',
+        blurb: 'Studio and location portrait work — beauty, fashion, editorial.',
+        layout: 'beauty',
+        // The four originals from his previous site, alternating monochrome
+        // and colour by design. The B&W frames are the photographer's grade —
+        // never "unify" the set.
+        items: [
+          { id: 'beauty-1', title: 'Editorial — form and light', kind: 'photo', ytId: null, poster: '/media/photos/beauty-01.webp' },
+          { id: 'beauty-2', title: 'Golden hour portrait', kind: 'photo', ytId: null, poster: '/media/photos/beauty-02.webp' },
+          { id: 'beauty-3', title: 'Beauty — studio', kind: 'photo', ytId: null, poster: '/media/photos/beauty-03.webp' },
+          { id: 'beauty-4', title: 'Duo portrait', kind: 'photo', ytId: null, poster: '/media/photos/beauty-04.webp' },
         ],
       },
     ] as WorkGroup[],
@@ -458,6 +477,52 @@ export const site = {
     // CONFIRM: bundle wording drafted from Jelani's standing offer.
     bundleNote:
       'Book photo and video together and a behind-the-scenes film like this comes free — brand transparency, on the house.',
+  },
+
+  /**
+   * Video-editing pricing, supplied by Jelani via James 2026-08-02.
+   * The model's rules are strict and load-bearing: two fixed tiers, no
+   * discounts, no in-between quantities; the quarterly package includes
+   * the quarter's branding strategy complimentary, precisely so the
+   * editing keeps being charged at full worth. Never add a discount
+   * badge, a crossed-out price, or a "most popular" label here.
+   * Coverage work (recaps, photo, second shooting) stays quote-per-project.
+   */
+  pricing: {
+    eyebrow: 'Pricing',
+    title: "An edit costs $100. That's the whole model.",
+    blurb:
+      'Video editing runs on fixed packages — no discounts, no in-between quantities, no negotiation theatre. Event coverage and photography are scoped per project through the card below.',
+    tiers: [
+      {
+        id: 'ten',
+        name: '10 edits',
+        price: '$1,000',
+        body: 'For a launch, a campaign burst, or a month of consistent posting.',
+        foot: '$100 per edit',
+        featured: false,
+      },
+      {
+        id: 'twenty',
+        name: '20 edits',
+        price: '$2,000',
+        body: 'The same $100 an edit, doubled — for teams feeding more than one channel.',
+        foot: '$100 per edit',
+        featured: false,
+      },
+      {
+        id: 'quarterly',
+        name: 'Quarterly',
+        price: 'From $3,000 / quarter',
+        body: 'Ten-plus videos a month with room to scale — and the quarter’s branding strategy comes with it, complimentary.',
+        foot: 'Strategy included',
+        featured: true,
+      },
+    ],
+    cta: 'Start with this',
+    // CONFIRM: currency presentation (assumed CAD, Toronto client base).
+    footnote:
+      'Prices in CAD. Event recaps, photo coverage, and second shooting are quoted per project.',
   },
 
   cta: {

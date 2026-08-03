@@ -63,6 +63,34 @@ function GroupBody({ group }: { group: WorkGroup }) {
     )
   }
 
+  if (group.layout === 'beauty') {
+    // A contact-strip row, deliberately not parallax: drift needs column
+    // height to have travel, and a single four-across row has none.
+    return (
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">
+        {group.items.map((item, i) => (
+          <Reveal as="li" key={item.id} delay={i * 0.08}>
+            <figure className="overflow-hidden rounded-xl border border-[var(--hairline)] bg-surface sm:rounded-2xl">
+              {item.poster ? (
+                <img
+                  src={item.poster}
+                  alt={item.title}
+                  width={500}
+                  height={625}
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-[4/5] w-full object-cover"
+                />
+              ) : (
+                <div className="aspect-[4/5] w-full" aria-hidden="true" />
+              )}
+            </figure>
+          </Reveal>
+        ))}
+      </ul>
+    )
+  }
+
   return (
     <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {group.items.map((item, i) => (

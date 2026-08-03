@@ -90,13 +90,32 @@ export function LiteYouTube({ item, featured = false, aspect: aspectProp }: Prop
     <>
       <div
         className="absolute inset-0 grain transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-        style={
-          item.poster
-            ? { backgroundImage: `url(${item.poster})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-            : { background: plateFor(item.id) }
-        }
+        // A real lazy <img>, not background-image: browsers fetch CSS
+        // backgrounds for every rendered element up front, which put all
+        // nine card posters on the initial-load network. Decorative here —
+        // the adjacent text carries the card's meaning.
+        style={item.poster ? undefined : { background: plateFor(item.id) }}
+      >
+        {item.poster && (
+          <img
+            src={item.poster}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+            className="size-full object-cover"
+          />
+        )}
+      </div>
+      {/* The featured slot gets a heavier veil: its Sportsnet poster is
+          broadcast key art with baked-in display text, and on narrow
+          viewports the card's own title climbs into that region — the
+          deeper mid-stop keeps it title-over-photo, not text-on-text. */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-t ${
+          featured ? 'from-ink/95 via-ink/50 to-ink/10' : 'from-ink/85 via-ink/20 to-transparent'
+        }`}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent" />
 
       <div className="absolute inset-0 grid place-items-center">
         {playable ? (

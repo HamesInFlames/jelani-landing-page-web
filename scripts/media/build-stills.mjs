@@ -70,4 +70,36 @@ for (const [i, file] of btsFiles.slice(0, 4).entries()) {
   console.log(`  ${out.padEnd(24)} ${fmtBytes(size).padStart(8)}  ← ${file}`)
 }
 
+/**
+ * Beauty & editorial set — the four originals from Jelani's carrd site,
+ * staged in "Beauty Set\" (01–04 prefix = display order, alternating
+ * monochrome and colour so the strip reads as composed).
+ *
+ * Sources are chat-resolution copies (503x630), so the target is 500w with
+ * withoutEnlargement — upscaling to the wall's 900w would add bytes and
+ * softness and buy nothing. At four across the tiles render ~297 CSS px,
+ * so 503 covers 1x and sits slightly under 2x: known, accepted cost.
+ * Full-size Lightroom exports dropped into the same folder upgrade this
+ * with a re-run, no code change. Two frames are B&W by the photographer's
+ * choice — never "unify" the set.
+ */
+const BEAUTY = [
+  { file: '01-editorial-chair.jpg', out: 'beauty-01.webp' },
+  { file: '02-golden-hour.jpg', out: 'beauty-02.webp' },
+  { file: '03-beauty-studio.jpg', out: 'beauty-03.webp' },
+  { file: '04-duo-portrait.jpg', out: 'beauty-04.webp' },
+]
+
+console.log('\nbeauty & editorial (4:5, ≤500w, no enlargement):')
+for (const entry of BEAUTY) {
+  const dest = path.join(photosDir, entry.out)
+  await sharp(path.join(SOURCES.beautySet, entry.file))
+    .resize(500, 625, { fit: 'cover', withoutEnlargement: true })
+    .webp({ quality: 82 })
+    .toFile(dest)
+  const { size } = await stat(dest)
+  total += size
+  console.log(`  ${entry.out.padEnd(24)} ${fmtBytes(size).padStart(8)}  ← ${entry.file}`)
+}
+
 console.log(`\ntotal stills: ${fmtBytes(total)}`)

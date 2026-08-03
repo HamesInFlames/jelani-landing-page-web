@@ -37,6 +37,7 @@ export const SOURCES = {
   canergy: path.join(ASSETS, 'Canergy Exports'),
   bts: path.join(ASSETS, 'Cellphone BTS'),
   kilaniBrief: path.join(ASSETS, 'Website refernece', 'Valentines Variation.pdf'),
+  beautySet: path.join(ASSETS, 'Beauty Set'),
 }
 
 export async function ffmpeg(args) {
