@@ -10,6 +10,7 @@
 import { readFile, writeFile, rm } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const root = path.resolve(import.meta.dirname, '..')
 const dist = path.join(root, 'dist')
@@ -20,7 +21,9 @@ if (!existsSync(ssrEntry)) {
   process.exit(1)
 }
 
-const { render } = await import(ssrEntry)
+// file:// URL rather than the bare path — absolute Windows paths (C:\…) are
+// rejected by the ESM loader.
+const { render } = await import(pathToFileURL(ssrEntry).href)
 const appHtml = render()
 
 const indexPath = path.join(dist, 'index.html')

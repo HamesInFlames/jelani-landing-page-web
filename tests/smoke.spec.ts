@@ -134,6 +134,67 @@ test('the CTA card walks through its three steps and keeps a stable height', asy
   )
 })
 
+test('the hero scrub renders its canvas over a prerendered poster', async ({ page }) => {
+  const hero = page.locator('#top')
+  await expect(hero.locator('canvas')).toHaveCount(1)
+  await expect(hero.locator('picture img')).toHaveAttribute('src', /hero-poster/)
+
+  // The scrub section reserves its full scroll runway up front — no CLS.
+  const height = await hero.evaluate((el) => el.getBoundingClientRect().height)
+  const viewport = page.viewportSize()!.height
+  expect(height).toBeGreaterThanOrEqual(viewport * 2.9)
+})
+
+test('reduced motion collapses the scrub to a static poster hero', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await page.waitForTimeout(600)
+
+  const hero = page.locator('#top')
+  const viewport = page.viewportSize()!.height
+  const height = await hero.evaluate((el) => el.getBoundingClientRect().height)
+  // Normal-height section: nothing to scrub, poster carries the image.
+  expect(height).toBeLessThanOrEqual(viewport * 1.2)
+  await expect(hero.locator('picture img')).toHaveAttribute('src', /hero-poster/)
+
+  // The full copy is present and readable without any scrolling theatre.
+  expect((await page.getByRole('heading', { level: 1 }).innerText()).replace(/\s+/g, ' ')).toBe(
+    'Fast-turnaround creative for brand events.',
+  )
+})
+
+test('the process section walks its four steps with the brief as evidence', async ({ page }) => {
+  await revealAll(page)
+  const process = page.locator('#process')
+
+  await expect(process.getByRole('heading', { name: 'From first call to final cut.' })).toBeVisible()
+  for (const step of ['Book a call', 'Creative brief', 'Shoot day', 'Fast delivery']) {
+    await expect(process.getByRole('heading', { name: step })).toBeVisible()
+  }
+  await expect(process.locator('img[src*="brief-page"]')).toBeVisible()
+  expect(await process.locator('img[src*="bts-"]').count()).toBeGreaterThanOrEqual(3)
+})
+
+test('the photography wall ships real stills, fully loaded', async ({ page }) => {
+  await revealAll(page)
+  const photos = page.locator('#work img[src*="/media/photos/photo-"]')
+  expect(await photos.count()).toBeGreaterThanOrEqual(9)
+
+  const broken = await photos.evaluateAll((imgs) =>
+    (imgs as HTMLImageElement[])
+      .filter((img) => img.complete && img.naturalWidth === 0)
+      .map((img) => img.src),
+  )
+  expect(broken).toEqual([])
+})
+
+test('the enquiry flow offers the video + photo bundle', async ({ page }) => {
+  const card = page.locator('#contact .card')
+  await card.scrollIntoViewIfNeeded()
+  await page.waitForTimeout(700)
+  await expect(page.getByRole('button', { name: 'Video + Photo bundle' })).toBeVisible()
+})
+
 test('page never scrolls horizontally', async ({ page }) => {
   await revealAll(page)
   const overflow = await page.evaluate(

@@ -72,20 +72,49 @@ export const site = {
      */
     reel: null as string | null,
     reelPoster: null as string | null,
+    /**
+     * The scroll-scrubbed hero: his own footage, frame by frame, under the
+     * visitor's thumb. Frames are built by scripts/media/build-sequence.mjs
+     * from the Soluna event recap (62.95s–66.45s, one unbroken shot).
+     * Takes precedence over `reel`; set to null to fall back to the
+     * ambient-light hero. Reduced-motion visitors get the poster.
+     */
+    sequence: {
+      base: '/sequence',
+      frameCount: 105,
+      baseSm: '/sequence-sm',
+      frameCountSm: 53,
+      poster: '/media/hero-poster.webp',
+      posterSm: '/media/hero-poster-sm.webp',
+    } as {
+      base: string
+      frameCount: number
+      baseSm?: string
+      frameCountSm?: number
+      poster: string
+      posterSm?: string
+    } | null,
   },
 
   /** Marquee: real credits interleaved with capabilities. */
+  // CONFIRM: public naming of Socliq, Canergy, Reset Studio, Soluna, and
+  // Kilani awaits Jelani's sign-off — each is one line to pull.
   marquee: [
     'Sportsnet',
     'Event recaps',
     'Visual Smugglers',
     'Second shooter',
-    'Camp Dreamwood',
+    'Soluna',
     'Same-week edits',
-    'BeeVibe Juicery',
+    'Bioderma',
     'Photo coverage',
     'Studio Impetus',
     'Brand campaigns',
+    'Canergy',
+    'Camp Dreamwood',
+    'Reset Studio',
+    'BeeVibe Juicery',
+    'Kilani',
   ],
 
   services: {
@@ -104,7 +133,9 @@ export const site = {
       {
         n: '02',
         title: 'Photo coverage',
-        body: 'Stills captured alongside the video on the same day, retouched and delivered as a gallery your team can pull from all quarter.',
+        // CONFIRM: the BTS-film bundle wording is drafted from Jelani's
+        // standing offer ("for brand transparency") — not yet signed off.
+        body: 'Stills captured alongside the video on the same day, retouched and delivered as a gallery your team can pull from all quarter. Book photo and video together and a behind-the-scenes film is included, free.',
         promise: 'Edited gallery in 72 hours',
       },
       {
@@ -251,6 +282,25 @@ export const site = {
         layout: 'grid',
         items: [
           {
+            id: 'soluna',
+            title: 'Soluna — Event Recap',
+            // CONFIRM: public naming pending Jelani's sign-off.
+            client: 'Soluna',
+            kind: 'video',
+            ytId: null,
+            poster: '/media/soluna-poster.webp',
+            note: 'Nightlife event, shot and cut for the feed',
+          },
+          {
+            id: 'bioderma',
+            title: 'Bioderma — Event Recap',
+            client: 'Bioderma',
+            kind: 'video',
+            ytId: null,
+            poster: '/media/bioderma-poster.webp',
+            note: 'Influencer event coverage — with Socliq',
+          },
+          {
             id: 'camp-dreamwood',
             title: 'Camp Dreamwood — Weekly Recap',
             client: 'Camp Dreamwood',
@@ -259,24 +309,34 @@ export const site = {
             poster: null,
             note: 'Recurring weekly recap series, summer 2021',
           },
-          {
-            id: 'bioderma',
-            title: 'Bioderma — Event Recap',
-            client: 'Bioderma',
-            kind: 'video',
-            ytId: null,
-            poster: null,
-            note: 'Coming soon',
-          },
         ],
       },
       {
         id: 'campaigns',
-        eyebrow: 'Campaigns · Studio Impetus',
+        eyebrow: 'Campaigns & activations',
         title: 'Brand campaigns and product.',
-        blurb: 'Campaign films and product photography produced through Studio Impetus.',
-        layout: 'grid',
+        blurb: 'Activation coverage and campaign stills for brands and the agencies that book them.',
         items: [
+          {
+            id: 'canergy-activation',
+            title: 'Canergy — Studio Activation',
+            // CONFIRM: public naming of Canergy pending Jelani's sign-off.
+            client: 'Canergy',
+            kind: 'photo',
+            ytId: null,
+            poster: '/media/photos/campaign-canergy.webp',
+            note: 'Brand activation stills — with Socliq',
+          },
+          {
+            id: 'reset-activation',
+            title: 'Reset Studio — Event Coverage',
+            // CONFIRM: public naming of Reset Studio pending Jelani's sign-off.
+            client: 'Reset Studio',
+            kind: 'photo',
+            ytId: null,
+            poster: '/media/photos/campaign-reset.webp',
+            note: 'Wellness event coverage — with Socliq',
+          },
           {
             id: 'beevibe',
             title: 'BeeVibe Juicery — Product',
@@ -286,24 +346,8 @@ export const site = {
             poster: null,
             note: 'Product photography',
           },
-          {
-            id: 'apparel-campaign',
-            title: 'Apparel Campaign',
-            // CONFIRM: brand name to be supplied by Jelani.
-            kind: 'video',
-            ytId: null,
-            poster: null,
-            note: 'Campaign film and stills',
-          },
-          {
-            id: 'lifestyle-campaign',
-            title: 'Lifestyle Campaign',
-            kind: 'video',
-            ytId: null,
-            poster: null,
-            note: 'Brand lifestyle content',
-          },
         ],
+        layout: 'grid',
       },
       {
         id: 'shorts',
@@ -345,19 +389,75 @@ export const site = {
       {
         id: 'photography',
         eyebrow: 'Photography',
-        title: 'Beauty, portrait, and editorial.',
+        title: 'Shot in the room, graded for the brand.',
+        blurb:
+          'Stills from live brand activations — the gallery a team pulls from long after the event wraps.',
         layout: 'gallery',
-        // PENDING: original exports. Screenshots from the old site are not
-        // shippable quality — these render as plates until files land.
+        // Selects from the Socliq x Canergy and Socliq x Reset Studio shoots,
+        // curated by scripts/media/build-stills.mjs (event-coverage frames over
+        // posed portraiture). The beauty/editorial set returns when Jelani
+        // sends original exports.
         items: [
-          { id: 'photo-1', title: 'Editorial portrait', kind: 'photo', ytId: null, poster: null },
-          { id: 'photo-2', title: 'Golden hour portrait', kind: 'photo', ytId: null, poster: null },
-          { id: 'photo-3', title: 'Beauty — studio', kind: 'photo', ytId: null, poster: null },
-          { id: 'photo-4', title: 'Duo portrait', kind: 'photo', ytId: null, poster: null },
-          { id: 'photo-5', title: 'Editorial — white series', kind: 'photo', ytId: null, poster: null },
+          { id: 'photo-1', title: 'Activation stills — group at the studio', kind: 'photo', ytId: null, poster: '/media/photos/photo-01.webp' },
+          { id: 'photo-2', title: 'Event coverage — content being captured', kind: 'photo', ytId: null, poster: '/media/photos/photo-02.webp' },
+          { id: 'photo-3', title: 'Brand activation — product in hand', kind: 'photo', ytId: null, poster: '/media/photos/photo-03.webp' },
+          { id: 'photo-4', title: 'Event coverage — candid', kind: 'photo', ytId: null, poster: '/media/photos/photo-04.webp' },
+          { id: 'photo-5', title: 'Activation stills — in the room', kind: 'photo', ytId: null, poster: '/media/photos/photo-05.webp' },
+          { id: 'photo-6', title: 'Event coverage — the class in session', kind: 'photo', ytId: null, poster: '/media/photos/photo-06.webp' },
+          { id: 'photo-7', title: 'Brand activation — portrait', kind: 'photo', ytId: null, poster: '/media/photos/photo-07.webp' },
+          { id: 'photo-8', title: 'Event coverage — warm light', kind: 'photo', ytId: null, poster: '/media/photos/photo-08.webp' },
+          { id: 'photo-9', title: 'Activation stills — the room at work', kind: 'photo', ytId: null, poster: '/media/photos/photo-09.webp' },
+          { id: 'photo-10', title: 'Event coverage — closing energy', kind: 'photo', ytId: null, poster: '/media/photos/photo-10.webp' },
         ],
       },
     ] as WorkGroup[],
+  },
+
+  process: {
+    eyebrow: 'Process',
+    title: 'From first call to final cut.',
+    blurb:
+      'Every engagement runs the same four steps — so you know what happens next before you have paid for anything.',
+    steps: [
+      {
+        n: '01',
+        title: 'Book a call',
+        body: 'Twenty minutes on what the event is, who the content is for, and where it will run.',
+      },
+      {
+        n: '02',
+        title: 'Creative brief',
+        body: 'Before the shoot, you get a written brief — goal, roles, locations, talent, budget — so the day is planned, not improvised.',
+      },
+      {
+        n: '03',
+        title: 'Shoot day',
+        body: 'I show up early, shoot the plan, and stay on the lookout for the moments the plan could not predict.',
+      },
+      {
+        n: '04',
+        title: 'Fast delivery',
+        body: 'Recaps in days, not weeks — horizontal and vertical cuts from the same shoot, ready to run.',
+      },
+    ],
+    brief: {
+      image: '/media/brief-page.webp',
+      // CONFIRM: naming Kilani publicly pending Jelani's sign-off.
+      caption: 'An actual page from a client creative brief — Kilani campaign.',
+      alt: 'A page from a real creative brief titled "The Goal", describing strategic studio photography for a brand partnership.',
+    },
+    bts: {
+      images: [
+        { src: '/media/photos/bts-01.webp', alt: 'Behind the scenes — a reformer pilates class being filmed' },
+        { src: '/media/photos/bts-02.webp', alt: 'Behind the scenes — event coverage in progress at a studio' },
+        { src: '/media/photos/bts-03.webp', alt: 'Behind the scenes — the room mid-shoot' },
+        { src: '/media/photos/bts-04.webp', alt: 'Behind the scenes — setting up a shot on the studio floor' },
+      ],
+      caption: 'Phone shots from a live shoot day.',
+    },
+    // CONFIRM: bundle wording drafted from Jelani's standing offer.
+    bundleNote:
+      'Book photo and video together and a behind-the-scenes film like this comes free — brand transparency, on the house.',
   },
 
   cta: {
@@ -368,7 +468,7 @@ export const site = {
       {
         id: 'need',
         question: 'What do you need?',
-        options: ['Event recap', 'Photo coverage', 'Second shooter', 'Editing support'],
+        options: ['Event recap', 'Photo coverage', 'Video + Photo bundle', 'Second shooter', 'Editing support'],
       },
       {
         id: 'when',

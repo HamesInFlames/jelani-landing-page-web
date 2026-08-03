@@ -1,11 +1,8 @@
 import { site } from '../content/site'
 import type { WorkGroup } from '../content/site'
 import { LiteYouTube } from './ui/LiteYouTube'
+import { ParallaxGallery } from './ui/ParallaxGallery'
 import { Reveal } from './ui/Reveal'
-
-/** Asymmetric spans for the photography wall: a 3-up row over a 2-up row. */
-const GALLERY_SPANS = ['sm:col-span-2', 'sm:col-span-2', 'sm:col-span-2', 'sm:col-span-3', 'sm:col-span-3']
-const GALLERY_RATIOS = ['3 / 4', '3 / 4', '3 / 4', '4 / 3', '4 / 3']
 
 function GroupHeader({ group }: { group: WorkGroup }) {
   // The featured card carries its own title over the artwork, so the header
@@ -60,18 +57,9 @@ function GroupBody({ group }: { group: WorkGroup }) {
 
   if (group.layout === 'gallery') {
     return (
-      <ul className="grid gap-4 sm:grid-cols-6">
-        {group.items.map((item, i) => (
-          <Reveal
-            as="li"
-            key={item.id}
-            delay={i * 0.06}
-            className={GALLERY_SPANS[i % GALLERY_SPANS.length]}
-          >
-            <LiteYouTube item={item} aspect={GALLERY_RATIOS[i % GALLERY_RATIOS.length]} />
-          </Reveal>
-        ))}
-      </ul>
+      <Reveal>
+        <ParallaxGallery items={group.items} />
+      </Reveal>
     )
   }
 

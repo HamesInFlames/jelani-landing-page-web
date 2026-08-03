@@ -1,17 +1,131 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from 'motion/react'
 import { site } from '../content/site'
 import { GoldLink } from './ui/GoldButton'
+import ScrollSequence from './ui/ScrollSequence'
 
 /**
- * The hero backdrop. When Jelani's reel lands (site.hero.reel) this mounts
- * a muted looping video, lazily: the poster paints immediately and the
- * source is only attached after first paint, so the LCP element is always
- * the headline or poster — never the video download.
+ * The hero copy, shared by both hero variants. The entrance below is CSS,
+ * not JS: this markup is prerendered, so the headline paints on the first
+ * frame rather than waiting for React to hydrate — the difference between
+ * a slow LCP and an instant one.
  *
- * With no reel it renders slow-drifting ambient light instead of a stock
- * placeholder clip: same cinematic read, zero bytes, and the swap stays a
- * one-file change.
+ * When `progress` is supplied (the scrub hero), the sub-line and CTAs bow
+ * out while the footage takes the stage mid-scrub, then return for the
+ * hand-off into the page. The headline itself never dims — it is the LCP
+ * element and the page's one fixed point.
+ */
+function HeroCopy({ progress }: { progress?: MotionValue<number> }) {
+  const reduced = useReducedMotion()
+  const words = site.hero.headline.split(' ')
+
+  // A stable stand-in keeps the hook unconditional when there is no scrub.
+  const still = useMotionValue(0)
+  const supportOpacity = useTransform(
+    progress ?? still,
+    [0, 0.28, 0.52, 0.86, 0.98],
+    progress && !reduced ? [1, 1, 0, 0, 1] : [1, 1, 1, 1, 1],
+  )
+  const supportEvents = useTransform(supportOpacity, (o) =>
+    o < 0.5 ? ('none' as const) : ('auto' as const),
+  )
+
+  return (
+    <div className="shell flex h-full items-center pb-10 pt-28 sm:pt-32">
+      <div className="max-w-4xl">
+        <p className="eyebrow hero-rise">{site.hero.eyebrow}</p>
+
+        <h1 className="display mt-5 text-paper">
+          {words.map((word, i) => (
+            // The separator sits *between* the spans, never inside them:
+            // a trailing space within an inline-block gets collapsed away,
+            // which runs the words together.
+            <Fragment key={`${word}-${i}`}>
+              <span
+                className="hero-rise inline-block"
+                // Kept tight on purpose: the headline is the LCP element,
+                // so a long stagger literally scores as a slower page.
+                style={{ animationDelay: `${0.06 + i * 0.05}s` }}
+              >
+                {word}
+              </span>
+              {i < words.length - 1 ? ' ' : null}
+            </Fragment>
+          ))}
+        </h1>
+
+        <motion.div style={{ opacity: supportOpacity, pointerEvents: supportEvents }}>
+          <p
+            className="hero-rise mt-7 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl"
+            style={{ animationDelay: `${0.1 + words.length * 0.05}s` }}
+          >
+            {site.hero.sub}
+          </p>
+
+          <div
+            className="hero-rise mt-10 flex flex-wrap items-center gap-3"
+            style={{ animationDelay: `${0.2 + words.length * 0.05}s` }}
+          >
+            <GoldLink href="#contact">{site.hero.primary}</GoldLink>
+            <GoldLink href="#work" variant="ghost">
+              {site.hero.secondary}
+              <span aria-hidden="true">↓</span>
+            </GoldLink>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * The scrub hero. Jelani's own footage — one unbroken shot from the Soluna
+ * event recap — drawn frame by frame under the visitor's scroll. The point
+ * is the demonstration: on every other site a sequence like this shows a
+ * product; here the footage IS the product.
+ *
+ * Scroll speed is never touched. Reduced-motion visitors get a static
+ * poster frame at normal height, with the full copy.
+ */
+function SequenceHero() {
+  const seq = site.hero.sequence!
+
+  return (
+    <ScrollSequence
+      id="top"
+      framePath={(i) => `${seq.base}/${String(i).padStart(4, '0')}.webp`}
+      frameCount={seq.frameCount}
+      framePathSm={
+        seq.baseSm ? (i) => `${seq.baseSm}/${String(i).padStart(4, '0')}.webp` : undefined
+      }
+      frameCountSm={seq.frameCountSm}
+      poster={seq.poster}
+      posterSm={seq.posterSm}
+      scrollLengthVh={300}
+      eagerFrames={12}
+    >
+      {(progress) => (
+        <>
+          {/* Footage needs a heavy veil to keep the headline above 4.5:1. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-ink/75 via-ink/55 to-ink" />
+          <div className="grain absolute inset-0" />
+          <HeroCopy progress={progress} />
+        </>
+      )}
+    </ScrollSequence>
+  )
+}
+
+/**
+ * The pre-sequence hero, kept whole as the fallback: it renders when
+ * `site.hero.sequence` is null, and its reel/ambient logic is unchanged.
  */
 function Backdrop() {
   const reduced = useReducedMotion()
@@ -70,14 +184,12 @@ function Backdrop() {
   )
 }
 
-export function Hero() {
+function ClassicHero() {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['0%', reduced ? '0%' : '15%'])
   const fade = useTransform(scrollYProgress, [0, 0.8], [1, reduced ? 1 : 0.35])
-
-  const words = site.hero.headline.split(' ')
 
   return (
     <section
@@ -101,53 +213,11 @@ export function Hero() {
       />
       <div className="grain absolute inset-0 -z-10" />
 
-      {/*
-        The entrance below is CSS, not JS. This markup is prerendered, so the
-        headline paints on the first frame rather than waiting for React to
-        hydrate — the difference between a slow LCP and an instant one.
-      */}
-      <div className="shell flex items-center pb-10 pt-28 sm:pt-32">
-        <div className="max-w-4xl">
-          <p className="eyebrow hero-rise">{site.hero.eyebrow}</p>
-
-          <h1 className="display mt-5 text-paper">
-            {words.map((word, i) => (
-              // The separator sits *between* the spans, never inside them:
-              // a trailing space within an inline-block gets collapsed away,
-              // which runs the words together.
-              <Fragment key={`${word}-${i}`}>
-                <span
-                  className="hero-rise inline-block"
-                  // Kept tight on purpose: the headline is the LCP element,
-                  // so a long stagger literally scores as a slower page.
-                  style={{ animationDelay: `${0.06 + i * 0.05}s` }}
-                >
-                  {word}
-                </span>
-                {i < words.length - 1 ? ' ' : null}
-              </Fragment>
-            ))}
-          </h1>
-
-          <p
-            className="hero-rise mt-7 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl"
-            style={{ animationDelay: `${0.1 + words.length * 0.05}s` }}
-          >
-            {site.hero.sub}
-          </p>
-
-          <div
-            className="hero-rise mt-10 flex flex-wrap items-center gap-3"
-            style={{ animationDelay: `${0.2 + words.length * 0.05}s` }}
-          >
-            <GoldLink href="#contact">{site.hero.primary}</GoldLink>
-            <GoldLink href="#work" variant="ghost">
-              {site.hero.secondary}
-              <span aria-hidden="true">↓</span>
-            </GoldLink>
-          </div>
-        </div>
-      </div>
+      <HeroCopy />
     </section>
   )
+}
+
+export function Hero() {
+  return site.hero.sequence ? <SequenceHero /> : <ClassicHero />
 }

@@ -265,3 +265,67 @@
 .scroll-row::-webkit-scrollbar {
   display: none;
 }
+
+/*
+  Scroll-driven flourishes — native CSS animation-timeline, which runs on
+  the compositor thread with zero JS. Support is ~85%, so both effects are
+  written as pure enhancement: the base state below is what unsupported
+  browsers (and reduced-motion visitors) keep, and it is always the
+  readable end state.
+*/
+
+/* Gold page-progress hairline along the very top edge. */
+.scroll-progress {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 70;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-soft));
+  transform: scaleX(0); /* invisible unless the animation below drives it */
+  transform-origin: left;
+}
+
+@keyframes progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Section rules draw themselves in as they enter the viewport. */
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-progress {
+      animation: progress-grow linear both;
+      animation-timeline: scroll(root);
+    }
+
+    .rule-gold {
+      transform-origin: left;
+      animation: rule-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+  }
+}
+
+/*
+  Reduced motion collapses the scrub section to one viewport — in CSS, not
+  JS, so it applies in the prerendered HTML before React ever hydrates
+  (and hydration never reconciles a mismatched inline style anyway).
+*/
+@media (prefers-reduced-motion: reduce) {
+  .scroll-sequence {
+    height: 100vh !important;
+  }
+}

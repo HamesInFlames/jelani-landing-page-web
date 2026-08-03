@@ -3,6 +3,7 @@ import { Hero } from './components/Hero'
 import { Marquee } from './components/Marquee'
 import { Services } from './components/Services'
 import { About } from './components/About'
+import { Process } from './components/Process'
 import { Proof } from './components/Proof'
 import { Work } from './components/Work'
 import { CtaSection } from './components/CtaSection'
@@ -18,6 +19,10 @@ export default function App() {
         Skip to content
       </a>
 
+      {/* Gold page-progress hairline — pure CSS scroll-driven animation;
+          browsers without support (or with reduced motion) never see it. */}
+      <div className="scroll-progress" aria-hidden="true" />
+
       <Nav />
 
       <main>
@@ -26,6 +31,7 @@ export default function App() {
         <Work />
         <Services />
         <About />
+        <Process />
         <Proof />
         <CtaSection />
       </main>
