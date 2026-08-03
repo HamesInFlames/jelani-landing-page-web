@@ -20,7 +20,13 @@ export interface WorkItem {
   ytId: string | null
   /** Path under /media. Null falls back to a generated gradient plate. */
   poster: string | null
-  /** One short line of context under the title. */
+  /**
+   * Silent looping clip played over the poster while the card is on screen.
+   * Built by scripts/media/build-previews.mjs. Absent = the poster stands
+   * alone, which is the case for work published on a client's own channel.
+   */
+  preview?: string
+  /** One short line of context. Not rendered at rest — hover only. */
   note?: string
 }
 
@@ -65,35 +71,22 @@ export const site = {
     primary: 'Book a call',
     secondary: 'See the work',
     /**
-     * PENDING: Jelani's showreel loop (muted, 10–20s, <4MB, 1080p max).
-     * Drop the file at /media/reel.mp4 and set both fields — the hero
-     * mounts the video layer automatically. Until then it renders an
-     * animated ambient backdrop rather than a placeholder clip.
+     * The hero loop — Jelani's own footage, playing muted on its own while
+     * scroll moves through the panels below. Built by build-reel.mjs from
+     * the Soluna recap. Null falls back to the ambient-light backdrop.
      */
-    reel: null as string | null,
-    reelPoster: null as string | null,
+    reel: '/media/reel.mp4' as string | null,
+    reelPoster: '/media/reel-poster.webp' as string | null,
     /**
-     * The scroll-scrubbed hero: his own footage, frame by frame, under the
-     * visitor's thumb. Frames are built by scripts/media/build-sequence.mjs
-     * from the Soluna event recap (62.95s–66.45s, one unbroken shot).
-     * Takes precedence over `reel`; set to null to fall back to the
-     * ambient-light hero. Reduced-motion visitors get the poster.
+     * Information panels staged across the pinned hero. Panel 1 is the
+     * prerendered first paint and carries the LCP headline; 2 and 3 arrive
+     * on scroll. Under reduced motion only panel 1 shows.
+     * CONFIRM: panels 2 and 3 are drafted — see CONTENT-INTAKE.md §2.
      */
-    sequence: {
-      base: '/sequence',
-      frameCount: 105,
-      baseSm: '/sequence-sm',
-      frameCountSm: 53,
-      poster: '/media/hero-poster.webp',
-      posterSm: '/media/hero-poster-sm.webp',
-    } as {
-      base: string
-      frameCount: number
-      baseSm?: string
-      frameCountSm?: number
-      poster: string
-      posterSm?: string
-    } | null,
+    stages: [
+      { id: 'deliver', line: 'Event recaps in 48–72 hours. Stills the same day. Vertical cuts ready for paid.' },
+      { id: 'proof', line: 'Sportsnet-featured. Founder of Studio Impetus. Toronto.' },
+    ],
   },
 
   /** Marquee: real credits interleaved with capabilities. */
@@ -230,7 +223,8 @@ export const site = {
         id: 'featured',
         eyebrow: 'Featured · Sportsnet',
         title: "Duane Notice's Battle Back From Injury",
-        blurb: 'A Black History Month feature produced for Sportsnet.',
+        // Group blurbs were cut in the Phase 7 minimal pass: against a grid
+        // of moving work they read as filler. Eyebrow + title carry it.
         layout: 'featured',
         items: [
           {
@@ -256,6 +250,7 @@ export const site = {
             kind: 'video',
             ytId: '0BmqVLkam-g',
             poster: '/media/yt-0BmqVLkam-g.webp',
+            preview: '/media/previews/cinematography-reel.mp4',
             note: 'Camera work across events, brand, and lifestyle',
           },
           {
@@ -264,6 +259,7 @@ export const site = {
             kind: 'video',
             ytId: '42abljCvlbc',
             poster: '/media/yt-42abljCvlbc.webp',
+            preview: '/media/previews/editors-reel-2020.mp4',
             note: 'Pacing, sound design, colour',
           },
           {
@@ -274,6 +270,7 @@ export const site = {
             kind: 'video',
             ytId: 'rTFInFnpJa8',
             poster: '/media/yt-rTFInFnpJa8.webp',
+            preview: '/media/previews/editors-reel-pt2.mp4',
             note: 'Second selection of edit work',
           },
         ],
@@ -292,6 +289,7 @@ export const site = {
             kind: 'video',
             ytId: null,
             poster: '/media/soluna-poster.webp',
+            preview: '/media/previews/soluna.mp4',
             note: 'Nightlife event, shot and cut for the feed',
           },
           {
@@ -301,6 +299,7 @@ export const site = {
             kind: 'video',
             ytId: null,
             poster: '/media/bioderma-poster.webp',
+            preview: '/media/previews/bioderma.mp4',
             note: 'Influencer event coverage — with Socliq',
           },
           {
@@ -318,7 +317,6 @@ export const site = {
         id: 'campaigns',
         eyebrow: 'Campaigns & activations',
         title: 'Brand campaigns and product.',
-        blurb: 'Activation coverage and campaign stills for brands and the agencies that book them.',
         items: [
           {
             id: 'canergy-activation',
@@ -356,7 +354,6 @@ export const site = {
         id: 'shorts',
         eyebrow: 'Short-form & UGC',
         title: 'Built for the feed.',
-        blurb: 'Vertical work — the format most of my clients are buying right now.',
         layout: 'row',
         items: [
           {
@@ -365,6 +362,7 @@ export const site = {
             kind: 'short',
             ytId: 'agP4vz_HjYw',
             poster: '/media/yt-agP4vz_HjYw.webp',
+            preview: '/media/previews/luxury-short.mp4',
           },
           {
             id: 'cinematic-short',
@@ -372,20 +370,31 @@ export const site = {
             kind: 'short',
             ytId: 'IRGQXQKWEek',
             poster: '/media/yt-IRGQXQKWEek.webp',
+            preview: '/media/previews/cinematic-short.mp4',
           },
-          {
-            id: 'promise',
-            title: 'Promise',
-            kind: 'short',
-            ytId: 'LTD6Zqn1vq0',
-            poster: '/media/yt-LTD6Zqn1vq0.webp',
-          },
+          /**
+           * REMOVED 2026-08-02 — "Promise" (LTD6Zqn1vq0).
+           *
+           * The card was approved in Phase 1 from a title alone. Reviewing
+           * the actual footage for a preview loop showed it is gym content
+           * end to end — shot in a fitness club, body-focused framing,
+           * motivational overlay text on every beat. That is the material
+           * HANDOFF.md §1 keeps off this site ("no fitness/bodybuilding
+           * content anywhere"), and it is not the allowed exception either:
+           * the carve-out covers commissioned campaigns for wellness
+           * brands, not personal fitness-motivation pieces.
+           *
+           * Pulled rather than re-cropped because no compliant 4s window
+           * exists. Restoring is this block plus its poster/preview files —
+           * needs James's or Jelani's call, not a silent revert.
+           */
           {
             id: 'star-v',
             title: 'Star Villas Costa Rica',
             kind: 'short',
             ytId: 'VdbsVKasgBI',
             poster: '/media/yt-VdbsVKasgBI.webp',
+            preview: '/media/previews/star-v.mp4',
           },
         ],
       },
@@ -417,7 +426,6 @@ export const site = {
         id: 'beauty',
         eyebrow: 'Beauty & editorial',
         title: 'Portraiture, when the brief is the face.',
-        blurb: 'Studio and location portrait work — beauty, fashion, editorial.',
         layout: 'beauty',
         // The four originals from his previous site, alternating monochrome
         // and colour by design. The B&W frames are the photographer's grade —

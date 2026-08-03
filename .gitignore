@@ -8,3 +8,7 @@ playwright-report
 .env
 .env.*
 tsconfig.tsbuildinfo
+
+# Downloaded source media for preview encoding — never committed.
+originals
+tools

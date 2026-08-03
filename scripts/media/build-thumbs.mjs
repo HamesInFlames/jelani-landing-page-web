@@ -32,7 +32,7 @@ const VIDEOS = [
   { id: '42abljCvlbc', shape: 'wide', title: 'Editors Reel 2020' },
   { id: 'rTFInFnpJa8', shape: 'wide', title: 'Editors Reel — Part 2' },
   { id: 'IRGQXQKWEek', shape: 'short', title: 'cinematic short' },
-  { id: 'LTD6Zqn1vq0', shape: 'short', title: 'promise' },
+  // 'promise' (LTD6Zqn1vq0) removed from the site — see site.ts.
   { id: 'VdbsVKasgBI', shape: 'short', title: 'Star Villas Costa Rica' },
   { id: 'agP4vz_HjYw', shape: 'short', title: 'Luxury Villa UGC' },
 ]

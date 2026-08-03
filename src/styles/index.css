@@ -320,12 +320,13 @@
 }
 
 /*
-  Reduced motion collapses the scrub section to one viewport — in CSS, not
-  JS, so it applies in the prerendered HTML before React ever hydrates
-  (and hydration never reconciles a mismatched inline style anyway).
+  Reduced motion collapses the staged hero to a single viewport: no panels
+  to scroll through, so the extra runway would just be dead space. This
+  lives in CSS, not JS, so it applies to the prerendered HTML before React
+  hydrates (hydration never reconciles a mismatched inline style anyway).
 */
 @media (prefers-reduced-motion: reduce) {
-  .scroll-sequence {
-    height: 100vh !important;
+  .hero-staged {
+    height: 100svh !important;
   }
 }

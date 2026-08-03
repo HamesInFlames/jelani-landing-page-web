@@ -110,12 +110,18 @@ test('every linked film plays through its own facade, never at rest', async ({ p
   // All six Phase 5 IDs plus the three reels are wired with self-hosted
   // artwork; no element anywhere references YouTube's image CDN.
   const cards = page.locator('#work button[aria-label^="Play"]')
-  expect(await cards.count()).toBeGreaterThanOrEqual(9)
+  expect(await cards.count()).toBeGreaterThanOrEqual(8)
   expect(await page.content()).not.toContain('i.ytimg.com')
 
-  // The reels row specifically has no unlinked plates left.
-  const reels = page.locator('#work section', { hasText: 'Shooting and cutting' })
-  await expect(reels.getByText('Film linking soon')).toHaveCount(0)
+  // Cut for conflicting with the brief's no-fitness-content rule; its ID
+  // must not reappear the way the Cover Letter video's must not.
+  expect(await page.content()).not.toContain('LTD6Zqn1vq0')
+
+  // Every reel is linked (badges themselves are gone as of Phase 7 — this
+  // asserts the wiring, not the absent chrome).
+  for (const reel of ['Cinematography Reel', 'Editors Reel 2020', 'Editors Reel — Part 2']) {
+    await expect(page.getByRole('button', { name: new RegExp(`Play ${reel}`) })).toBeVisible()
+  }
 
   // Clicking the featured card mounts exactly one nocookie iframe.
   await page.getByRole('button', { name: "Play Duane Notice's Battle Back From Injury" }).click()
@@ -199,33 +205,116 @@ test('the CTA card walks through its three steps and keeps a stable height', asy
   )
 })
 
-test('the hero scrub renders its canvas over a prerendered poster', async ({ page }) => {
+test('the hero loops muted footage and reserves its staging runway', async ({ page }) => {
   const hero = page.locator('#top')
-  await expect(hero.locator('canvas')).toHaveCount(1)
-  await expect(hero.locator('picture img')).toHaveAttribute('src', /hero-poster/)
+  const video = hero.locator('video')
 
-  // The scrub section reserves its full scroll runway up front — no CLS.
+  await expect(video).toHaveCount(1)
+  await expect(video).toHaveAttribute('poster', /reel-poster/)
+  // Lazy by construction: src is attached after first paint, so the LCP is
+  // never the video download.
+  await expect(video).toHaveAttribute('preload', 'none')
+  expect(await video.evaluate((el: HTMLVideoElement) => el.muted)).toBe(true)
+  expect(await video.evaluate((el: HTMLVideoElement) => el.loop)).toBe(true)
+
+  // The staged section reserves its full runway up front — no CLS.
   const height = await hero.evaluate((el) => el.getBoundingClientRect().height)
   const viewport = page.viewportSize()!.height
-  expect(height).toBeGreaterThanOrEqual(viewport * 2.9)
+  expect(height).toBeGreaterThanOrEqual(viewport * 2.5)
 })
 
-test('reduced motion collapses the scrub to a static poster hero', async ({ page }) => {
+test('scrolling the hero swaps in the later information panels', async ({ page }) => {
+  const hero = page.locator('#top')
+  const runway = await hero.evaluate((el) => el.getBoundingClientRect().height)
+
+  // Panel 3 carries the proof line; it must be invisible at the top and
+  // legible once the visitor has scrolled through the hero.
+  const proof = page.getByText('Sportsnet-featured. Founder of Studio Impetus. Toronto.')
+  const opacityOf = async () =>
+    Number(
+      await proof.evaluate((el) => {
+        let node: HTMLElement | null = el as HTMLElement
+        let min = 1
+        while (node && node !== document.body) {
+          min = Math.min(min, parseFloat(getComputedStyle(node).opacity))
+          node = node.parentElement
+        }
+        return String(min)
+      }),
+    )
+
+  expect(await opacityOf()).toBeLessThan(0.1)
+
+  await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), runway * 0.92)
+  await page.waitForTimeout(700)
+  expect(await opacityOf()).toBeGreaterThan(0.8)
+})
+
+test('reduced motion gives a still hero, one viewport tall, with no autoplay', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
-  await page.waitForTimeout(600)
+  await page.waitForTimeout(800)
 
   const hero = page.locator('#top')
   const viewport = page.viewportSize()!.height
   const height = await hero.evaluate((el) => el.getBoundingClientRect().height)
-  // Normal-height section: nothing to scrub, poster carries the image.
   expect(height).toBeLessThanOrEqual(viewport * 1.2)
-  await expect(hero.locator('picture img')).toHaveAttribute('src', /hero-poster/)
 
-  // The full copy is present and readable without any scrolling theatre.
+  // The poster carries the image; the clip is never fetched or played.
+  const video = hero.locator('video')
+  await expect(video).toHaveAttribute('poster', /reel-poster/)
+  expect(await video.evaluate((el: HTMLVideoElement) => el.currentSrc)).toBe('')
+
+  // Panel 1's full copy reads without any scrolling theatre.
   expect((await page.getByRole('heading', { level: 1 }).innerText()).replace(/\s+/g, ' ')).toBe(
     'Fast-turnaround creative for brand events.',
   )
+
+  // No card preview plays either.
+  await revealAll(page)
+  const playing = await page.locator('#work video').evaluateAll((vids) =>
+    (vids as HTMLVideoElement[]).filter((v) => !v.paused).length,
+  )
+  expect(playing).toBe(0)
+})
+
+test('card previews are silent, lazy, and paused when off screen', async ({ page }) => {
+  await revealAll(page)
+
+  const previews = page.locator('#work video')
+  expect(await previews.count()).toBeGreaterThanOrEqual(8)
+
+  const offenders = await previews.evaluateAll((vids) =>
+    (vids as HTMLVideoElement[])
+      .filter((v) => !v.muted || v.getAttribute('preload') !== 'none' || !v.loop)
+      .map((v) => v.currentSrc || '(no src)'),
+  )
+  expect(offenders).toEqual([])
+
+  // Scrolled back to the top, nothing in the work gallery should be running.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+  await page.waitForTimeout(900)
+  const stillPlaying = await previews.evaluateAll((vids) =>
+    (vids as HTMLVideoElement[]).filter((v) => !v.paused).length,
+  )
+  expect(stillPlaying).toBe(0)
+})
+
+test('cards stay quiet at rest — no badges, no notes over the artwork', async ({ page }) => {
+  await revealAll(page)
+  const work = page.locator('#work')
+
+  await expect(work.getByText('Film linking soon')).toHaveCount(0)
+  await expect(work.getByText('Coming soon')).toHaveCount(0)
+
+  // Context still reaches assistive tech through the button label even
+  // though the resting card no longer prints the client name.
+  await expect(
+    page.getByRole('button', { name: 'Play Camp Dreamwood — Weekly Recap — Camp Dreamwood' }),
+  ).toBeVisible()
+
+  // Cards without a film (Soluna, Bioderma) are plates, not dead players.
+  await expect(page.getByRole('button', { name: /Play Soluna/ })).toHaveCount(0)
 })
 
 test('the process section walks its four steps with the brief as evidence', async ({ page }) => {

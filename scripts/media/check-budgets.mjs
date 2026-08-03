@@ -17,10 +17,11 @@ const MB = 1024 * 1024
 const KB = 1024
 
 const checks = [
-  { dir: 'sequence', maxTotal: 5 * MB, label: 'desktop scrub set' },
-  { dir: 'sequence-sm', maxTotal: 2 * MB, label: 'mobile scrub set' },
+  { dir: 'media/previews', maxTotal: 6 * MB, maxFile: 700 * KB, label: 'card previews' },
   { dir: 'media/photos', maxTotal: 3 * MB, maxFile: 300 * KB, label: 'stills' },
-  { dir: 'media', maxTotal: 4 * MB, maxFile: 300 * KB, label: 'posters & media', shallow: true },
+  // The hero reel lives here and is the one file allowed past the poster
+  // ceiling — its own 4 MB budget is enforced by build-reel.mjs.
+  { dir: 'media', maxTotal: 8 * MB, maxFile: 4 * MB, label: 'posters, reel & media', shallow: true },
 ]
 
 let failed = false
