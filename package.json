@@ -35,14 +35,17 @@
     "@vitejs/plugin-react": "^4.3.4",
     "axe-core": "^4.12.1",
     "chrome-launcher": "^1.2.1",
-    "ffmpeg-static": "^5.3.0",
     "ffprobe-static": "^3.1.0",
     "lighthouse": "^13.4.1",
     "pdf-to-png-converter": "^4.2.0",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.2",
-    "vite": "^6.0.5",
+    "vite": "^6.0.5"
+  },
+  "//optionalDependencies": "Media-authoring tools, needed only to regenerate assets in scripts/media — never to build or serve the site. They live here because their install steps reach outside npm: yt-dlp-exec's preinstall requires a Python interpreter, and ffmpeg-static downloads an ~80MB binary from GitHub. On a deploy image with no Python that preinstall aborts the entire install, which is exactly how the Railway build broke. Under optionalDependencies npm reports the failure and carries on, so a machine that has Python gets working media tooling and one that does not still ships the site.",
+  "optionalDependencies": {
+    "ffmpeg-static": "^5.3.0",
     "yt-dlp-exec": "^1.0.2"
   }
 }

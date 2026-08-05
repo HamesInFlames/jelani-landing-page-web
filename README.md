@@ -82,6 +82,23 @@ Behaviour worth knowing before it goes live:
 - Submissions are capped at 5 per address per 10 minutes, and a hidden
   honeypot field drops bots without telling them.
 
+## Media tooling and the deploy
+
+`scripts/media/*` regenerates posters, previews, and the hero reel. Two of
+its tools install badly on a deploy image, so they are **optional
+dependencies**: `yt-dlp-exec` (its preinstall shells out to a Python
+interpreter) and `ffmpeg-static` (downloads an ~80MB binary from GitHub).
+
+Under `optionalDependencies` npm reports a failure and carries on instead
+of aborting the whole install. That matters because a Railway Node image
+has no Python, and the preinstall failing there took the entire build down
+with it — `npm ci` never finished, so `npm run build` never ran.
+
+Practically: a dev machine with Python installs everything and the media
+scripts work as before. A deploy image skips what it cannot build and still
+ships the site. If `npm run` of a media script reports a missing module,
+that is this — install Python, then `npm install`.
+
 ## Quality gates
 
 `npm test` runs both suites: `test:server` (10 Node assertions covering the
