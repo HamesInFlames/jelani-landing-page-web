@@ -324,7 +324,7 @@ test('cards stay quiet at rest — no badges, no notes over the artwork', async 
   await expect(page.getByRole('button', { name: /Play Soluna/ })).toHaveCount(0)
 })
 
-test('the process section walks its four steps with the brief as evidence', async ({ page }) => {
+test('the process section walks its four steps, and nothing else', async ({ page }) => {
   await revealAll(page)
   const process = page.locator('#process')
 
@@ -332,8 +332,13 @@ test('the process section walks its four steps with the brief as evidence', asyn
   for (const step of ['Book a call', 'Creative brief', 'Shoot day', 'Fast delivery']) {
     await expect(process.getByRole('heading', { name: step })).toBeVisible()
   }
-  await expect(process.locator('img[src*="brief-page"]')).toBeVisible()
-  expect(await process.locator('img[src*="bts-"]').count()).toBeGreaterThanOrEqual(3)
+
+  // The evidence block (brief page, shoot-day phone strip, bundle line) was
+  // removed 2026-08-05. The section is the four steps now — a stray image
+  // here means a half-revert, and the files it would need are gone.
+  await expect(process.locator('img[src*="brief-page"]')).toHaveCount(0)
+  await expect(process.locator('img[src*="bts-"]')).toHaveCount(0)
+  await expect(process.locator('img')).toHaveCount(0)
 })
 
 test('the photography wall ships real stills, fully loaded', async ({ page }) => {

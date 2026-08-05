@@ -459,25 +459,21 @@ export const site = {
         body: 'Recaps in days, not weeks — horizontal and vertical cuts from the same shoot, ready to run.',
       },
     ],
-    brief: {
-      image: '/media/brief-page.webp',
-      // Kilani naming signed off via Discord 2026-08-05.
-      caption: 'An actual page from a client creative brief — Kilani campaign.',
-      alt: 'A page from a real creative brief titled "The Goal", describing strategic studio photography for a brand partnership.',
-    },
-    bts: {
-      images: [
-        { src: '/media/photos/bts-01.webp', alt: 'Behind the scenes — a reformer pilates class being filmed' },
-        { src: '/media/photos/bts-02.webp', alt: 'Behind the scenes — event coverage in progress at a studio' },
-        { src: '/media/photos/bts-03.webp', alt: 'Behind the scenes — the room mid-shoot' },
-        { src: '/media/photos/bts-04.webp', alt: 'Behind the scenes — setting up a shot on the studio floor' },
-      ],
-      caption: 'Phone shots from a live shoot day.',
-    },
-    // Revised per Jelani (Discord, 2026-08-05): BTS films are a paid add-on,
-    // never free — "idk anyone that films for free rn".
-    bundleNote:
-      'A behind-the-scenes film like this can be added to any booking — brand transparency for your feed, quoted as its own deliverable.',
+    /**
+     * REMOVED 2026-08-05 — the evidence block under the steps: the Kilani
+     * creative-brief page (`brief`), the four shoot-day phone shots
+     * (`bts`), and the behind-the-scenes bundle line (`bundleNote`).
+     *
+     * Pulled at James's direction as sloppy, and it was: the brief page is
+     * a near-empty white sheet with one line of body text, unreadable at
+     * the size it rendered, and the four phone frames were the same room
+     * from four almost identical angles. The four steps say it better.
+     *
+     * Note this took the last mention of behind-the-scenes films off the
+     * site. The offer still stands — it lives in WORKING-AGREEMENT.md as a
+     * quoted add-on. If it should sell on the page, it wants a line in the
+     * Services card, not a photo strip.
+     */
   },
 
   /**

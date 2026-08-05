@@ -11,7 +11,7 @@
  */
 
 import path from 'node:path'
-import { mkdir, readdir, stat } from 'node:fs/promises'
+import { mkdir, stat } from 'node:fs/promises'
 
 import sharp from 'sharp'
 
@@ -56,19 +56,10 @@ for (const entry of GALLERY) total += await emit(entry, 900, 1125, 78, photosDir
 console.log('\ncampaign cards (4:5, 1000w):')
 for (const entry of CAMPAIGNS) total += await emit(entry, 1000, 1250, 80, photosDir)
 
-// Behind-the-scenes strip: phone shots, treated small and honest.
-console.log('\nbehind the scenes (4:3, 640w):')
-const btsFiles = (await readdir(SOURCES.bts)).filter((f) => /\.jpe?g$/i.test(f)).sort()
-for (const [i, file] of btsFiles.slice(0, 4).entries()) {
-  const out = `bts-0${i + 1}.webp`
-  await sharp(path.join(SOURCES.bts, file))
-    .resize(640, 480, { fit: 'cover' })
-    .webp({ quality: 72 })
-    .toFile(path.join(photosDir, out))
-  const { size } = await stat(path.join(photosDir, out))
-  total += size
-  console.log(`  ${out.padEnd(24)} ${fmtBytes(size).padStart(8)}  ← ${file}`)
-}
+// The behind-the-scenes strip was removed from the site 2026-08-05 along
+// with the rest of the process evidence block — see the removal note in
+// site.ts. Its build step is gone with it so a rerun cannot quietly
+// recreate the four files.
 
 /**
  * Beauty & editorial set — the four originals from Jelani's carrd site,
