@@ -192,7 +192,7 @@ public/fonts/  public/media/    # self-hosted woff2, video + posters
 - **Brand framing:** site is JelaniWoodsTV; Studio Impetus appears as a founder credential, not the lead brand.
 - **CTA:** conversational card flow per §4.8 — explicitly *not* a traditional form.
 - **Cuts approved:** Cover Letter video and gaming GFX banners are off the site.
-- **Client naming:** name Sportsnet, Camp Dreamwood, BeeVibe Juicery, Visual Smugglers publicly for now — pending Jelani's final say; keep names easily removable (they live only in `content/site.ts`).
+- **Client naming:** name Sportsnet, Camp Dreamwood, Visual Smugglers publicly for now — pending Jelani's final say; keep names easily removable (they live only in `content/site.ts`). Kilani was signed off 2026-08-05. **BeeVibe Juicery was removed from the site 2026-08-05** — its card had no artwork; do not re-add the name without a real product image.
 - **BuildApe:** removed entirely (relationship ended).
 - Calendly (or booking) link → replaces `#book`
 - Domain (likely `jelaniwoods.tv` or similar) — not blocking; Railway URL for staging

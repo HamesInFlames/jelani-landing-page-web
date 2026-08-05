@@ -74,7 +74,7 @@ These names currently appear on the site. Tick to confirm we may show them
 publicly, or cross out any that must come off:
 
 - ☐ Sportsnet  ☐ Camp Dreamwood  ☐ Visual Smugglers  ☐ Studio Impetus
-- ☐ BeeVibe Juicery  ☐ Bioderma  ☐ Socliq  ☐ Soluna
+- ☐ Bioderma  ☐ Socliq  ☐ Soluna
 - ☐ Canergy  ☐ Reset Studio  ☐ Kilani
 - The process section shows a page of your Kilani creative brief that
   mentions the **MLSE partnership**. OK to show? ☐ Yes ☐ No
@@ -144,11 +144,15 @@ Experience entries shown: Studio Impetus (Founder) · Visual Smugglers
 | Event | Camp Dreamwood — Weekly Recap | |
 | Campaign | Canergy — Studio Activation · with Socliq | |
 | Campaign | Reset Studio — Event Coverage · with Socliq | |
-| Campaign | BeeVibe Juicery — Product *(no image yet — send product shots)* | |
 | Short | Luxury Villa UGC | |
 | Short | Cinematic Short | |
 | Short | Promise | |
 | Short | Star Villas Costa Rica | |
+
+**BeeVibe Juicery came off the site on 2026-08-05.** Its card never had a
+photo, so it rendered as an empty tile next to real work — worse than not
+mentioning the job at all. If you send product shots it goes back on
+properly, with the image.
 
 **The three showreels came off the site on 2026-08-05** (Cinematography
 Reel, Editors Reel 2020, Editors Reel — Part 2). They were the oldest work
@@ -192,7 +196,6 @@ screenshots:
 - ☐ Headshot (§5)
 - ☐ Full-resolution exports of the four beauty/editorial photos (we have
   small copies; big ones make the section sharper)
-- ☐ BeeVibe product photos (§7)
 - ☐ Your original export files of the **Sportsnet piece** and a **Camp
   Dreamwood recap** — wanted for the silent moving previews on those two
   cards (every other card's preview we can already make)

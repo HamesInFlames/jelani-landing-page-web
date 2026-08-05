@@ -107,7 +107,8 @@ export const site = {
     'Canergy',
     'Camp Dreamwood',
     'Reset Studio',
-    'BeeVibe Juicery',
+    // BeeVibe Juicery removed 2026-08-05 with its card — the marquee should
+    // only name clients whose work the page can actually show.
     'Kilani',
   ],
 
@@ -330,15 +331,19 @@ export const site = {
             poster: '/media/photos/campaign-reset.webp',
             note: 'Wellness event coverage — with Socliq',
           },
-          {
-            id: 'beevibe',
-            title: 'BeeVibe Juicery — Product',
-            client: 'BeeVibe Juicery',
-            kind: 'photo',
-            ytId: null,
-            poster: null,
-            note: 'Product photography',
-          },
+          /**
+           * REMOVED 2026-08-05 — "BeeVibe Juicery — Product".
+           *
+           * The card never had artwork. `poster: null` fell back to the
+           * generated gradient plate, so it sat in a row of real
+           * photography as an empty tile with a caption — the one thing on
+           * the page advertising work it could not show. It was carried
+           * pending original product exports from Jelani that never came.
+           *
+           * If the exports arrive, this is a new card, not a revert: drop
+           * the file in /public/media/photos and add the item back with a
+           * real poster. Never restore it with poster: null.
+           */
         ],
         layout: 'grid',
       },

@@ -94,7 +94,18 @@ test('the work gallery lists the real credits', async ({ page }) => {
   await expect(work.getByRole('heading', { name: "Duane Notice's Battle Back From Injury" })).toBeVisible()
   await expect(work.getByRole('heading', { name: 'Camp Dreamwood — Weekly Recap' })).toBeVisible()
   await expect(work.getByRole('heading', { name: 'Soluna — Event Recap' })).toBeVisible()
-  await expect(work.getByRole('heading', { name: 'BeeVibe Juicery — Product' })).toBeVisible()
+  await expect(work.getByRole('heading', { name: 'Canergy — Studio Activation' })).toBeVisible()
+
+  // BeeVibe was removed 2026-08-05 — it was the only card with no artwork.
+  // Asserting the name is absent catches a restore that brings back the
+  // empty gradient plate along with it.
+  expect(await page.content()).not.toContain('BeeVibe')
+
+  // Stronger than the name check: every work card now ships a real image,
+  // so no card should be falling back to the generated plate that
+  // LiteYouTube paints when `poster` is null. One of these means a card was
+  // added without its artwork.
+  await expect(work.locator('[style*="linear-gradient"]')).toHaveCount(0)
 
   // The Reels group was pulled 2026-08-05 — the section header must be gone
   // too, not left behind as an empty heading.
