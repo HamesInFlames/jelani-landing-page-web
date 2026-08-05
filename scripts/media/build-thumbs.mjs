@@ -28,9 +28,8 @@ import { PUBLIC, fmtBytes } from './lib.mjs'
 const VIDEOS = [
   { id: 'CavSj2reqa4', shape: 'wide', title: "Duane Notice's Battle Back From Injury (Sportsnet)" },
   { id: 'MhNHciOVE1w', shape: 'wide', title: 'August Week 3 - 2021 (Camp Dreamwood)' },
-  { id: '0BmqVLkam-g', shape: 'wide', title: 'Cinematography Reel' },
-  { id: '42abljCvlbc', shape: 'wide', title: 'Editors Reel 2020' },
-  { id: 'rTFInFnpJa8', shape: 'wide', title: 'Editors Reel — Part 2' },
+  // The three showreels were removed from the site 2026-08-05 — see the
+  // removal note in site.ts.
   { id: 'IRGQXQKWEek', shape: 'short', title: 'cinematic short' },
   // 'promise' (LTD6Zqn1vq0) removed from the site — see site.ts.
   { id: 'VdbsVKasgBI', shape: 'short', title: 'Star Villas Costa Rica' },

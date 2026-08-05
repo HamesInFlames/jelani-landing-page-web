@@ -20,9 +20,8 @@ import { REPO, fmtBytes } from './lib.mjs'
 
 /** itemId → YouTube ID. Item ids match src/content/site.ts. */
 const OWN_UPLOADS = [
-  { item: 'cinematography-reel', id: '0BmqVLkam-g' },
-  { item: 'editors-reel-2020', id: '42abljCvlbc' },
-  { item: 'editors-reel-pt2', id: 'rTFInFnpJa8' },
+  // The three showreels were removed from the site 2026-08-05 — see the
+  // removal note in site.ts. Re-adding them here re-downloads them.
   { item: 'luxury-short', id: 'agP4vz_HjYw' },
   { item: 'cinematic-short', id: 'IRGQXQKWEek' },
   // 'promise' removed from the site (gym content, brief §1) — see site.ts.

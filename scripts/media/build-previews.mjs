@@ -27,9 +27,8 @@ const ORIGINALS = path.join(REPO, 'originals')
 const PREVIEWS = [
   { item: 'soluna', file: SOURCES.soluna, at: 43.7, shape: 'wide' },
   { item: 'bioderma', file: SOURCES.bioderma, at: 30, shape: 'wide' },
-  { item: 'cinematography-reel', fromOriginals: true, atFraction: 0.25, shape: 'wide' },
-  { item: 'editors-reel-2020', fromOriginals: true, atFraction: 0.25, shape: 'wide' },
-  { item: 'editors-reel-pt2', fromOriginals: true, atFraction: 0.25, shape: 'wide' },
+  // The three showreels were removed from the site 2026-08-05 — see the
+  // removal note in site.ts.
   { item: 'luxury-short', fromOriginals: true, atFraction: 0.2, shape: 'tall' },
   { item: 'cinematic-short', fromOriginals: true, atFraction: 0.2, shape: 'tall' },
   // 'promise' is deliberately absent — see the removal note in site.ts.

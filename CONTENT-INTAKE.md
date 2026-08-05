@@ -139,9 +139,6 @@ Experience entries shown: Studio Impetus (Founder) · Visual Smugglers
 | Card | Shown as | Your correction |
 |---|---|---|
 | Featured | Duane Notice's Battle Back From Injury · Sportsnet | |
-| Reel | Cinematography Reel | |
-| Reel | Editors Reel 2020 | |
-| Reel | Editors Reel — Part 2 *(your "ANOTHA ONE" — we kept "Part 2" for clarity; want it changed?)* | |
 | Event | Soluna — Event Recap | |
 | Event | Bioderma — Event Recap · with Socliq | |
 | Event | Camp Dreamwood — Weekly Recap | |
@@ -152,6 +149,12 @@ Experience entries shown: Studio Impetus (Founder) · Visual Smugglers
 | Short | Cinematic Short | |
 | Short | Promise | |
 | Short | Star Villas Costa Rica | |
+
+**The three showreels came off the site on 2026-08-05** (Cinematography
+Reel, Editors Reel 2020, Editors Reel — Part 2). They were the oldest work
+on the page and Part 2 opened on gameplay capture, which reads as a
+different job to a brand buyer. If you want a reel back, the right move is
+a new one cut from recent brand work — say the word and it goes in.
 
 - Anything missing that should be on the site? List it (with a link or
   file): ______________________________

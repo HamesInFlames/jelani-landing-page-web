@@ -93,8 +93,12 @@ test('the work gallery lists the real credits', async ({ page }) => {
   await expect(work.getByText('Featured · Sportsnet')).toBeVisible()
   await expect(work.getByRole('heading', { name: "Duane Notice's Battle Back From Injury" })).toBeVisible()
   await expect(work.getByRole('heading', { name: 'Camp Dreamwood — Weekly Recap' })).toBeVisible()
-  await expect(work.getByRole('heading', { name: 'Cinematography Reel' })).toBeVisible()
+  await expect(work.getByRole('heading', { name: 'Soluna — Event Recap' })).toBeVisible()
   await expect(work.getByRole('heading', { name: 'BeeVibe Juicery — Product' })).toBeVisible()
+
+  // The Reels group was pulled 2026-08-05 — the section header must be gone
+  // too, not left behind as an empty heading.
+  await expect(work.getByText('Shooting and cutting, in ninety seconds.')).toHaveCount(0)
 
   // Cut by client decision — must never reappear. KuuIsQKZmw4 is the Cover
   // Letter video's YouTube ID; asserting on it catches a re-wire that
@@ -107,20 +111,20 @@ test('the work gallery lists the real credits', async ({ page }) => {
 test('every linked film plays through its own facade, never at rest', async ({ page }) => {
   await revealAll(page)
 
-  // All six Phase 5 IDs plus the three reels are wired with self-hosted
-  // artwork; no element anywhere references YouTube's image CDN.
+  // Every linked card is wired with self-hosted artwork; no element
+  // anywhere references YouTube's image CDN.
   const cards = page.locator('#work button[aria-label^="Play"]')
-  expect(await cards.count()).toBeGreaterThanOrEqual(8)
+  expect(await cards.count()).toBeGreaterThanOrEqual(5)
   expect(await page.content()).not.toContain('i.ytimg.com')
 
   // Cut for conflicting with the brief's no-fitness-content rule; its ID
   // must not reappear the way the Cover Letter video's must not.
   expect(await page.content()).not.toContain('LTD6Zqn1vq0')
 
-  // Every reel is linked (badges themselves are gone as of Phase 7 — this
-  // asserts the wiring, not the absent chrome).
-  for (const reel of ['Cinematography Reel', 'Editors Reel 2020', 'Editors Reel — Part 2']) {
-    await expect(page.getByRole('button', { name: new RegExp(`Play ${reel}`) })).toBeVisible()
+  // The showreels were pulled 2026-08-05; their IDs must not come back by
+  // way of a stale poster or a half-reverted group.
+  for (const id of ['0BmqVLkam-g', '42abljCvlbc', 'rTFInFnpJa8']) {
+    expect(await page.content()).not.toContain(id)
   }
 
   // Clicking the featured card mounts exactly one nocookie iframe.
@@ -281,8 +285,11 @@ test('reduced motion gives a still hero, one viewport tall, with no autoplay', a
 test('card previews are silent, lazy, and paused when off screen', async ({ page }) => {
   await revealAll(page)
 
+  // Five since the showreels came off on 2026-08-05: the two event recaps
+  // and the three shorts. The floor exists so this test cannot quietly pass
+  // by finding nothing at all.
   const previews = page.locator('#work video')
-  expect(await previews.count()).toBeGreaterThanOrEqual(8)
+  expect(await previews.count()).toBeGreaterThanOrEqual(5)
 
   const offenders = await previews.evaluateAll((vids) =>
     (vids as HTMLVideoElement[])

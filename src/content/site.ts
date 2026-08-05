@@ -252,43 +252,21 @@ export const site = {
           },
         ],
       },
-      {
-        id: 'reels',
-        eyebrow: 'Reels',
-        title: 'Shooting and cutting, in ninety seconds.',
-        layout: 'grid',
-        items: [
-          {
-            id: 'cinematography-reel',
-            title: 'Cinematography Reel',
-            kind: 'video',
-            ytId: '0BmqVLkam-g',
-            poster: '/media/yt-0BmqVLkam-g.webp',
-            preview: '/media/previews/cinematography-reel.mp4',
-            note: 'Camera work across events, brand, and lifestyle',
-          },
-          {
-            id: 'editors-reel-2020',
-            title: 'Editors Reel 2020',
-            kind: 'video',
-            ytId: '42abljCvlbc',
-            poster: '/media/yt-42abljCvlbc.webp',
-            preview: '/media/previews/editors-reel-2020.mp4',
-            note: 'Pacing, sound design, colour',
-          },
-          {
-            // Titled "Editors Reel | ANOTHA ONE" on YouTube; the site keeps
-            // "Part 2" — clearer to a buyer scanning a row of three reels.
-            id: 'editors-reel-pt2',
-            title: 'Editors Reel — Part 2',
-            kind: 'video',
-            ytId: 'rTFInFnpJa8',
-            poster: '/media/yt-rTFInFnpJa8.webp',
-            preview: '/media/previews/editors-reel-pt2.mp4',
-            note: 'Second selection of edit work',
-          },
-        ],
-      },
+      /**
+       * REMOVED 2026-08-05 — the "Reels" group (Cinematography Reel,
+       * Editors Reel 2020, Editors Reel — Part 2), pulled at James's
+       * direction.
+       *
+       * The showreels were the weakest thing on a page selling brand event
+       * work: two were dated, and Part 2 opened on gameplay capture, which
+       * reads as a different job entirely to a brand buyer. The featured
+       * Sportsnet piece and the event recaps below carry the same proof
+       * without the mismatch.
+       *
+       * Restoring is this block plus the three items' posters, previews,
+       * and YouTube IDs (0BmqVLkam-g, 42abljCvlbc, rTFInFnpJa8) — recover
+       * them from git history rather than re-downloading.
+       */
       {
         id: 'events',
         eyebrow: 'Events & recaps',
