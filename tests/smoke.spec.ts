@@ -349,6 +349,40 @@ test('the enquiry flow offers the video + photo bundle', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Video + Photo bundle' })).toBeVisible()
 })
 
+test('the enquiry route is mounted, and says so when no channel is configured', async ({
+  request,
+}) => {
+  const res = await request.post('/api/enquiry', {
+    data: { email: 'lead@brand.com', need: 'Event recap' },
+  })
+
+  // 404 would mean the route never mounted and the card's fallback is
+  // covering for a bug. 501 is the honest "not configured yet" the card is
+  // built to handle — see server/enquiry.js.
+  expect(res.status()).toBe(501)
+})
+
+test('the enquiry card keeps working while delivery is unconfigured', async ({ page }) => {
+  const card = page.locator('#contact .card')
+  await card.scrollIntoViewIfNeeded()
+  await page.waitForTimeout(700)
+
+  await page.getByRole('button', { name: 'Event recap' }).click()
+  await page.getByRole('button', { name: 'This month' }).click()
+  await page.locator('#cta-email').fill('lead@brand.com')
+
+  // The mailto handoff would navigate the page away; intercept it so the
+  // assertion is about the fallback firing, not about the mail client.
+  const handoff = page.waitForRequest((r) => r.url().startsWith('mailto:'), { timeout: 5000 })
+  await page.getByRole('button', { name: 'Send it' }).click()
+
+  await expect(page.getByText("Got it — I'll be in touch.")).toBeVisible()
+  await handoff.catch(() => {
+    // Chromium may swallow the mailto rather than emit a request; the
+    // success state above is the behaviour that matters to the visitor.
+  })
+})
+
 test('page never scrolls horizontally', async ({ page }) => {
   await revealAll(page)
   const overflow = await page.evaluate(

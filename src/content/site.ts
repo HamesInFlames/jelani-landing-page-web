@@ -586,8 +586,13 @@ export const site = {
 } as const
 
 /**
- * Formspree-class relay endpoint for the CTA card.
- * PENDING: create the endpoint on Jelani's email and paste the URL here.
- * While null, the card submits via a prefilled mailto: instead.
+ * Where the enquiry card posts. This is our own server route (server/
+ * enquiry.js), not a third party — no account, no per-submission quota, and
+ * the visitor's details never leave our infrastructure.
+ *
+ * The route answers 501 until a delivery channel is configured on the
+ * deployment (`ENQUIRY_WEBHOOK_URL`, or `RESEND_API_KEY` + `ENQUIRY_TO`),
+ * and the card falls back to its prefilled mailto: on any non-OK response.
+ * So this is safe to ship before the channel exists — see README §Enquiries.
  */
-export const FORM_ENDPOINT: string | null = null
+export const FORM_ENDPOINT: string | null = '/api/enquiry'

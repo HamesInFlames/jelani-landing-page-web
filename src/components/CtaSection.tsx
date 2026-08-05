@@ -15,7 +15,7 @@ function buildMailto(answers: Record<string, string>, email: string, note: strin
     note || '(no additional note)',
   ]
   return `mailto:${site.meta.email}?subject=${encodeURIComponent(
-    'Booking enquiry via jelaniwoodstv.com',
+    'Booking enquiry from your website',
   )}&body=${encodeURIComponent(lines.join('\n'))}`
 }
 
@@ -26,6 +26,9 @@ export function CtaSection() {
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [email, setEmail] = useState('')
   const [note, setNote] = useState('')
+  // Honeypot: hidden from real visitors, irresistible to form bots. The
+  // server drops any submission that fills it.
+  const [company, setCompany] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle')
 
   const go = (next: number) => {
@@ -47,7 +50,7 @@ export function CtaSection() {
         const res = await fetch(FORM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ ...answers, email, note }),
+          body: JSON.stringify({ ...answers, email, note, company }),
         })
         if (res.ok) {
           setStatus('done')
@@ -213,6 +216,21 @@ export function CtaSection() {
                             className="w-full resize-none rounded-xl border border-[var(--hairline-strong)] bg-ink px-4 py-3 text-paper placeholder:text-muted/70 focus:border-gold focus:outline-none"
                           />
                         </div>
+
+                        {/* Off-screen rather than display:none — bots skip
+                            fields that cannot be rendered. Hidden from the
+                            accessibility tree and the tab order, so no real
+                            visitor ever meets it. */}
+                        <input
+                          type="text"
+                          name="company"
+                          value={company}
+                          onChange={(e) => setCompany(e.target.value)}
+                          tabIndex={-1}
+                          autoComplete="off"
+                          aria-hidden="true"
+                          className="absolute left-[-9999px] h-px w-px opacity-0"
+                        />
 
                         <GoldButton type="submit" disabled={status === 'sending'} className="w-full">
                           {status === 'sending' ? 'Sending…' : site.cta.final.submit}

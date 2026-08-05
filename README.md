@@ -53,15 +53,41 @@ it raw measured *worse* than not prerendering at all.
 | Photography | `/public/media/` + set `poster` on the gallery items |
 | Testimonials | `site.proof.testimonials` — the block stays hidden while empty |
 | Booking link | `site.meta.bookingUrl` |
-| Enquiry relay | `FORM_ENDPOINT` at the bottom of `site.ts` |
+| Enquiry delivery | one environment variable — see below |
 
-Until `FORM_ENDPOINT` is set, the enquiry card falls back to opening the
-visitor's mail client with their answers prefilled — it is never a dead end.
+## Enquiries
+
+The card posts to `/api/enquiry`, a route on our own server
+(`server/enquiry.js`) — no third-party form service, no per-submission
+quota, and the visitor's details never leave the deployment.
+
+Delivery is off until one of these is set on the Railway service. Set
+either; setting both means a lead survives one of them failing:
+
+| Variable | Effect |
+|---|---|
+| `ENQUIRY_WEBHOOK_URL` | Posts the enquiry to a Discord or Slack webhook, or any JSON endpoint (Zapier, Make). **Fastest to set up** — a Discord channel webhook takes about a minute and needs no domain or account. |
+| `RESEND_API_KEY` + `ENQUIRY_TO` | Emails the enquiry, with the visitor's address as reply-to. `ENQUIRY_FROM` optional; a verified sending domain is required for anything but Resend's test sender. |
+
+Behaviour worth knowing before it goes live:
+
+- **Nothing configured** → the route answers `501` and the card falls back
+  to opening the visitor's mail client with their answers prefilled, exactly
+  as it did before. Shipping this without the variable changes nothing.
+- **Delivery fails** → `502`, and the card takes the same mailto fallback.
+  A lead is never shown a success screen it did not earn.
+- **Every enquiry is logged** to the deploy log as a `[enquiry]` line
+  *before* delivery is attempted, so a lead is recoverable even if every
+  channel is down.
+- Submissions are capped at 5 per address per 10 minutes, and a hidden
+  honeypot field drops bots without telling them.
 
 ## Quality gates
 
-Checked with `npm run test:e2e` (18 assertions across desktop and mobile) and
-a Lighthouse mobile run. Current state: Performance 92, Accessibility 100,
+`npm test` runs both suites: `test:server` (10 Node assertions covering the
+enquiry route's validation, honeypot, rate limit, and failure modes) and
+`test:e2e` (44 Playwright assertions across desktop and mobile). Plus a
+Lighthouse mobile run — current state: Performance 92, Accessibility 100,
 Best Practices 100, SEO 100, CLS 0.
 
 ## Fonts
