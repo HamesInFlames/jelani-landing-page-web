@@ -13,6 +13,19 @@ polish the phrasing on our side without changing your meaning.
 > haven't okayed. Anything you leave blank stays as-is but keeps its
 > "pending your sign-off" flag on our side.
 
+> **Update — 2026-08-05.** Your Discord messages already answered four
+> items, and the site now reflects them — skip these below:
+> - **§3 Kilani:** ✅ confirmed ("a big one to have on there") — added to the
+>   Experience section: 3-month contract, PM + photography, Raptors home games.
+> - **§4 bundle offer:** the "free behind-the-scenes film" line is retired —
+>   BTS film is now shown as a paid add-on.
+> - **§4/§9 photo + video same day:** copy now says it's a two-shooter
+>   booking, since one operator can't cover both.
+> - **§5 about:** "four years in sales" corrected to over a decade in
+>   customer retention — keeping clients, minimizing churn.
+> - **Logo:** plain-text wordmark confirmed fine ("use plain text colors are
+>   fine") — the site already does this.
+
 ---
 
 ## 1. The basics

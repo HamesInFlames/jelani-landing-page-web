@@ -90,8 +90,9 @@ export const site = {
   },
 
   /** Marquee: real credits interleaved with capabilities. */
-  // CONFIRM: public naming of Socliq, Canergy, Reset Studio, Soluna, and
-  // Kilani awaits Jelani's sign-off — each is one line to pull.
+  // CONFIRM: public naming of Socliq, Canergy, Reset Studio, and Soluna
+  // awaits Jelani's sign-off — each is one line to pull. Kilani was signed
+  // off via Discord 2026-08-05.
   marquee: [
     'Sportsnet',
     'Event recaps',
@@ -126,9 +127,11 @@ export const site = {
       {
         n: '02',
         title: 'Photo coverage',
-        // CONFIRM: the BTS-film bundle wording is drafted from Jelani's
-        // standing offer ("for brand transparency") — not yet signed off.
-        body: 'Stills captured alongside the video on the same day, retouched and delivered as a gallery your team can pull from all quarter. Book photo and video together and a behind-the-scenes film is included, free.',
+        // Revised per Jelani (Discord, 2026-08-05): the free-BTS bundle is
+        // retired ("behind the scenes film would incur a cost"), and one
+        // operator cannot shoot photo and video at once ("if I'm on photo
+        // there's nobody on video") — same-day both means a second shooter.
+        body: 'Dedicated stills coverage, retouched and delivered as a gallery your team can pull from all quarter. Photo and video on the same day is a two-shooter booking — one camera cannot cover both — so it is scoped with a second shooter up front.',
         promise: 'Edited gallery in 72 hours',
       },
       {
@@ -155,7 +158,10 @@ export const site = {
     body: [
       "I'm Jelani-Issa Woods — a director of photography, editor, and the founder of Studio Impetus, a Toronto media-creator studio. I shoot and cut content for brands and agencies across the GTA: event recaps, campaign work, product stills, and the short-form that comes out of both.",
       'Most of my work starts at an event and ends as a set of assets your team can actually run — a hero cut, a stills gallery, and vertical versions ready for paid. I came up through agency production as a project manager and DP at Visual Smugglers, so I know what a client deadline and a shot list are worth.',
-      'Before all of this I spent four years in sales, which is a strange line on a creative résumé until you have sat in a kickoff and watched a shoot get scoped without anyone asking what the content is for. I ask.',
+      // Corrected per Jelani (Discord, 2026-08-05): over a decade in customer
+      // retention, not "four years in sales" — known for keeping clients and
+      // minimizing churn.
+      'Before all of this I spent over a decade in customer retention — the side of sales where the job is keeping clients, not closing them. It shows in how I work: I ask what the content is for, scope it honestly, and deliver so the next booking is the easy part.',
     ],
     // PENDING: headshot. Until it arrives the portrait frame renders as a gold-rule plate.
     portrait: null as string | null,
@@ -178,6 +184,14 @@ export const site = {
         // CONFIRM: exact dates/title pending Jelani's LinkedIn text.
         detail:
           'Toronto video production agency. Ran productions end to end and shot social, event, and brand content for commercial clients.',
+      },
+      {
+        org: 'Kilani',
+        role: 'Project Management & Photography',
+        // Added per Jelani's sign-off (Discord, 2026-08-05): "Kilani is a big
+        // one to have on there" — 3-month contract, Raptors home games.
+        detail:
+          'Three-month brand contract — project management and photography, including coverage at Toronto Raptors home games.',
       },
       {
         org: 'Sportsnet',
@@ -469,7 +483,7 @@ export const site = {
     ],
     brief: {
       image: '/media/brief-page.webp',
-      // CONFIRM: naming Kilani publicly pending Jelani's sign-off.
+      // Kilani naming signed off via Discord 2026-08-05.
       caption: 'An actual page from a client creative brief — Kilani campaign.',
       alt: 'A page from a real creative brief titled "The Goal", describing strategic studio photography for a brand partnership.',
     },
@@ -482,9 +496,10 @@ export const site = {
       ],
       caption: 'Phone shots from a live shoot day.',
     },
-    // CONFIRM: bundle wording drafted from Jelani's standing offer.
+    // Revised per Jelani (Discord, 2026-08-05): BTS films are a paid add-on,
+    // never free — "idk anyone that films for free rn".
     bundleNote:
-      'Book photo and video together and a behind-the-scenes film like this comes free — brand transparency, on the house.',
+      'A behind-the-scenes film like this can be added to any booking — brand transparency for your feed, quoted as its own deliverable.',
   },
 
   /**
