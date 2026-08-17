@@ -6,17 +6,25 @@ import { Reveal } from './ui/Reveal'
 
 const STEP_COUNT = site.cta.steps.length + 1
 
-function buildMailto(answers: Record<string, string>, email: string, note: string) {
-  const lines = [
-    `What they need: ${answers['need'] ?? '—'}`,
-    `Timing: ${answers['when'] ?? '—'}`,
-    `Reply to: ${email}`,
-    '',
-    note || '(no additional note)',
+/** The same shape the server relays, so both routes read identically. */
+function summarise(answers: Record<string, string>, email: string, note: string) {
+  return [
+    { label: 'What they need', value: answers['need'] ?? '—' },
+    { label: "What it's for", value: answers['for'] ?? '—' },
+    { label: 'Timing', value: answers['when'] ?? '—' },
+    { label: 'Reply to', value: email },
+    { label: 'Note', value: note || '(no additional note)' },
   ]
+}
+
+function buildMailto(answers: Record<string, string>, email: string, note: string) {
+  const lines = summarise(answers, email, note)
+    .filter((line) => line.label !== 'Note')
+    .map((line) => `${line.label}: ${line.value}`)
+
   return `mailto:${site.meta.email}?subject=${encodeURIComponent(
     'Booking enquiry from your website',
-  )}&body=${encodeURIComponent(lines.join('\n'))}`
+  )}&body=${encodeURIComponent([...lines, '', note || '(no additional note)'].join('\n'))}`
 }
 
 export function CtaSection() {
@@ -29,7 +37,11 @@ export function CtaSection() {
   // Honeypot: hidden from real visitors, irresistible to form bots. The
   // server drops any submission that fills it.
   const [company, setCompany] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'failed'>('idle')
+
+  // Both terminal states replace the question flow, so the progress dots
+  // and the Back link answer to this rather than to `done` alone.
+  const finished = status === 'done' || status === 'failed'
 
   const go = (next: number) => {
     setDir(next > step ? 1 : -1)
@@ -52,6 +64,8 @@ export function CtaSection() {
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({ ...answers, email, note, company }),
         })
+        // Success is a 2xx from our own server and nothing else: that is
+        // the only response that means a channel actually took the lead.
         if (res.ok) {
           setStatus('done')
           return
@@ -61,10 +75,12 @@ export function CtaSection() {
       }
     }
 
-    // No relay configured (or it failed): hand off to the visitor's mail
-    // client with everything they answered already filled in.
+    // Delivery failed. The mail client is still worth trying — it works on
+    // desktop — but it silently does nothing on most phones, so the card
+    // says what happened instead of showing a tick it did not earn, and
+    // keeps every answer on screen to be copied out.
     window.location.href = buildMailto(answers, email, note)
-    setStatus('done')
+    setStatus('failed')
   }
 
   const slide = {
@@ -99,9 +115,9 @@ export function CtaSection() {
                     <span
                       key={i}
                       className={`h-1 rounded-full transition-all duration-300 ${
-                        i === step && status !== 'done'
+                        i === step && !finished
                           ? 'w-7 bg-gold'
-                          : i < step || status === 'done'
+                          : i < step || finished
                             ? 'w-3 bg-gold/50'
                             : 'w-3 bg-[var(--hairline-strong)]'
                       }`}
@@ -109,7 +125,7 @@ export function CtaSection() {
                   ))}
                 </div>
 
-                {step > 0 && status !== 'done' && (
+                {step > 0 && !finished && (
                   <button
                     type="button"
                     onClick={() => go(step - 1)}
@@ -139,6 +155,45 @@ export function CtaSection() {
                         {site.cta.success.title}
                       </h3>
                       <p className="mt-3 leading-relaxed text-muted">{site.cta.success.body}</p>
+                    </motion.div>
+                  ) : status === 'failed' ? (
+                    <motion.div
+                      key="failed"
+                      variants={slide}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                      role="alert"
+                    >
+                      <h3 className="text-xl font-semibold tracking-tight text-paper sm:text-2xl">
+                        {site.cta.failure.title}
+                      </h3>
+                      <p className="mt-3 leading-relaxed text-muted">
+                        {site.cta.failure.body}{' '}
+                        <a
+                          href={`mailto:${site.meta.email}`}
+                          className="font-medium text-gold underline underline-offset-4 transition-colors hover:text-gold-soft"
+                        >
+                          {site.meta.email}
+                        </a>
+                      </p>
+
+                      {/* Nothing the visitor typed is thrown away — they can
+                          read it straight off the card into an email. */}
+                      <div className="mt-6 border-t border-[var(--hairline)] pt-5">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+                          {site.cta.failure.answersLabel}
+                        </p>
+                        <dl className="text-sm">
+                          {summarise(answers, email, note).map((line) => (
+                            <div key={line.label} className="mt-3 flex flex-wrap gap-x-2">
+                              <dt className="text-muted">{line.label}:</dt>
+                              <dd className="text-paper">{line.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      </div>
                     </motion.div>
                   ) : current ? (
                     <motion.div

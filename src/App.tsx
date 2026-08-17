@@ -1,7 +1,9 @@
 import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
 import { Marquee } from './components/Marquee'
+import { Problem } from './components/Problem'
 import { Services } from './components/Services'
+import { WhyMe } from './components/WhyMe'
 import { About } from './components/About'
 import { Pricing } from './components/Pricing'
 import { Process } from './components/Process'
@@ -29,8 +31,10 @@ export default function App() {
       <main>
         <Hero />
         <Marquee />
+        <Problem />
         <Work />
         <Services />
+        <WhyMe />
         <About />
         <Process />
         <Proof />

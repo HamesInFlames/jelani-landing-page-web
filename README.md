@@ -53,29 +53,49 @@ it raw measured *worse* than not prerendering at all.
 | Photography | `/public/media/` + set `poster` on the gallery items |
 | Testimonials | `site.proof.testimonials` — the block stays hidden while empty |
 | Booking link | `site.meta.bookingUrl` |
-| Enquiry delivery | one environment variable — see below |
+| Enquiry delivery | works with no setup — one activation tap, see below |
 
 ## Enquiries
 
 The card posts to `/api/enquiry`, a route on our own server
-(`server/enquiry.js`) — no third-party form service, no per-submission
-quota, and the visitor's details never leave the deployment.
+(`server/enquiry.js`). The visitor's details go to Jelani, never to an
+account we have to keep.
 
-Delivery is off until one of these is set on the Railway service. Set
-either; setting both means a lead survives one of them failing:
+**Delivery works with no setup.** The route always relays through
+[FormSubmit](https://formsubmit.co), which needs no key, no account, and no
+environment variable — it emails `jelaniwoods@gmail.com` (or `ENQUIRY_TO`
+when that is set).
+
+The one step, and it can be done from a phone:
+
+1. Deploy.
+2. Submit the form once yourself, with any address.
+3. FormSubmit mails an activation link to Jelani's inbox — tap **Activate**.
+
+That is the whole setup. Every submission after it delivers straight
+through. Until it is done, FormSubmit accepts the post and declines to
+send, which the route reads as a failure (see below) rather than as a
+delivered lead.
+
+Two optional upgrades, for faster or more durable notification. Neither
+replaces FormSubmit — they run **alongside** it, so a lead survives any one
+channel failing:
 
 | Variable | Effect |
 |---|---|
-| `ENQUIRY_WEBHOOK_URL` | Posts the enquiry to a Discord or Slack webhook, or any JSON endpoint (Zapier, Make). **Fastest to set up** — a Discord channel webhook takes about a minute and needs no domain or account. |
+| `ENQUIRY_WEBHOOK_URL` | Posts the enquiry to a Discord or Slack webhook, or any JSON endpoint (Zapier, Make). Arrives as a phone notification in seconds; a Discord channel webhook takes about a minute to set up. |
 | `RESEND_API_KEY` + `ENQUIRY_TO` | Emails the enquiry, with the visitor's address as reply-to. `ENQUIRY_FROM` optional; a verified sending domain is required for anything but Resend's test sender. |
+| `ENQUIRY_TO` (alone) | Also redirects the FormSubmit relay away from the default address. |
 
 Behaviour worth knowing before it goes live:
 
-- **Nothing configured** → the route answers `501` and the card falls back
-  to opening the visitor's mail client with their answers prefilled, exactly
-  as it did before. Shipping this without the variable changes nothing.
-- **Delivery fails** → `502`, and the card takes the same mailto fallback.
-  A lead is never shown a success screen it did not earn.
+- **Any channel succeeding** → `200`, and the card shows its success state.
+  That state is shown on nothing else.
+- **Every channel failing** (including an unactivated FormSubmit address)
+  → `502`, and the card says so: it still tries the visitor's mail client,
+  but it prints "couldn't send automatically", the email address, and every
+  answer the visitor gave, so nothing is lost and nobody is told a lead
+  landed when it did not.
 - **Every enquiry is logged** to the deploy log as a `[enquiry]` line
   *before* delivery is attempted, so a lead is recoverable even if every
   channel is down.
@@ -101,9 +121,11 @@ that is this — install Python, then `npm install`.
 
 ## Quality gates
 
-`npm test` runs both suites: `test:server` (10 Node assertions covering the
-enquiry route's validation, honeypot, rate limit, and failure modes) and
-`test:e2e` (44 Playwright assertions across desktop and mobile). Plus a
+`npm test` runs both suites: `test:server` (14 Node assertions covering the
+enquiry route's channel list, validation, honeypot, rate limit, and failure
+modes) and `test:e2e` (48 Playwright assertions across desktop and mobile,
+with `/api/enquiry` stubbed in the browser so no test run mails a lead).
+Plus a
 Lighthouse mobile run — current state: Performance 92, Accessibility 100,
 Best Practices 100, SEO 100, CLS 0.
 

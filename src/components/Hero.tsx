@@ -176,8 +176,18 @@ export function Hero() {
                 {site.hero.sub}
               </p>
 
+              {/* Proof, in small type, on the same CSS entrance as the rest
+                  of panel 1 — it is prerendered markup and must not wait for
+                  hydration to appear. */}
+              <p
+                className="hero-rise mt-6 max-w-2xl text-xs font-semibold uppercase tracking-[0.18em] text-gold-soft sm:text-sm"
+                style={{ animationDelay: `${0.15 + words.length * 0.05}s` }}
+              >
+                {site.hero.proof}
+              </p>
+
               <div
-                className="hero-rise mt-10 flex flex-wrap items-center gap-3"
+                className="hero-rise mt-9 flex flex-wrap items-center gap-3"
                 style={{ animationDelay: `${0.2 + words.length * 0.05}s` }}
               >
                 <GoldLink href="#contact">{site.hero.primary}</GoldLink>

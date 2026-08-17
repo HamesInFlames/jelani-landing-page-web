@@ -6,18 +6,27 @@
  * window that pops up — and on mobile it often opens nothing at all. This
  * endpoint takes the submission server-side instead.
  *
- * Delivery is deliberately configuration-driven, and the fallback is the
- * point: when nothing is configured the route answers 501 and the card
- * drops back to the mailto it uses today. Setting one environment variable
- * turns real capture on; setting none changes nothing. Either way the
- * enquiry is written to the process log first, so a lead survives even a
- * total delivery failure.
+ * Delivery needs no configuration. FormSubmit is always in the channel
+ * list, so a fresh deployment with no environment variables at all still
+ * relays every enquiry to Jelani's inbox — the setup is one tap on the
+ * activation email FormSubmit sends the first time, which can be done from
+ * a phone. The environment variables below are upgrades, not requirements,
+ * and they run *alongside* FormSubmit rather than instead of it, so a lead
+ * survives any one channel failing.
  *
  *   ENQUIRY_WEBHOOK_URL  Discord, Slack, or any JSON endpoint (Zapier etc.)
  *   RESEND_API_KEY       with ENQUIRY_TO (+ optional ENQUIRY_FROM) for email
+ *   ENQUIRY_TO           also redirects the FormSubmit relay away from the
+ *                        default address
+ *
+ * Either way the enquiry is written to the process log before any delivery
+ * is attempted, so a lead survives even a total delivery failure.
  */
 
-const MAX_FIELD = { email: 200, need: 80, when: 80, note: 2000 }
+/** Where FormSubmit relays to when nothing is configured — the address the page already prints. */
+const DEFAULT_ENQUIRY_TO = 'jelaniwoods@gmail.com'
+
+const MAX_FIELD = { email: 200, need: 80, for: 80, when: 80, note: 2000 }
 
 // One visitor, one enquiry, is the normal case; the allowance is set well
 // above that so a genuine second thought never hits a wall, and far below
@@ -54,6 +63,7 @@ function format(enquiry) {
   return [
     '**New enquiry from the website**',
     `What they need: ${enquiry.need || '—'}`,
+    `What it's for: ${enquiry.for || '—'}`,
     `Timing: ${enquiry.when || '—'}`,
     `Reply to: ${enquiry.email}`,
     '',
@@ -104,6 +114,57 @@ async function sendEmail(enquiry) {
   if (!res.ok) throw new Error(`resend responded ${res.status}`)
 }
 
+/**
+ * The zero-setup channel. FormSubmit relays a JSON post to an email address
+ * with no account, no API key, and no environment variable — the only setup
+ * is the activation link it mails to that address the first time something
+ * is submitted, which is one tap from a phone.
+ *
+ * Readable keys, not our field names: whatever comes out the other end is
+ * what Jelani reads in his inbox.
+ */
+async function postFormSubmit(enquiry) {
+  // The address goes into the path unescaped, as FormSubmit documents it —
+  // `@` is legal in a path segment, and percent-encoding it is not something
+  // their endpoint promises to undo.
+  const to = (process.env.ENQUIRY_TO || DEFAULT_ENQUIRY_TO).trim()
+
+  const res = await fetch(`https://formsubmit.co/ajax/${to}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({
+      _subject: `New enquiry — ${enquiry.need || 'website'}`,
+      _replyto: enquiry.email,
+      _captcha: 'false',
+      _template: 'box',
+      'What they need': enquiry.need || '—',
+      "What it's for": enquiry.for || '—',
+      Timing: enquiry.when || '—',
+      Email: enquiry.email,
+      Note: enquiry.note || '(no additional note)',
+    }),
+    signal: AbortSignal.timeout(8000),
+  })
+
+  if (!res.ok) throw new Error(`formsubmit responded ${res.status}`)
+
+  // A 200 is not proof of delivery: FormSubmit answers 200 with
+  // {"success":"false"} when the address has never been activated, and it
+  // sends those flags as strings rather than booleans. Anything we cannot
+  // read as an explicit success counts as a failure, because the visitor
+  // must not be shown a success screen the lead did not earn.
+  let payload = null
+  try {
+    payload = await res.json()
+  } catch {
+    payload = null
+  }
+
+  if (String(payload?.success).toLowerCase() !== 'true') {
+    throw new Error(`formsubmit declined: ${payload?.message ?? 'no success flag in the response'}`)
+  }
+}
+
 function channels() {
   const list = []
   if (process.env.ENQUIRY_WEBHOOK_URL) {
@@ -112,13 +173,19 @@ function channels() {
   if (process.env.RESEND_API_KEY && process.env.ENQUIRY_TO) {
     list.push({ name: 'email', send: sendEmail })
   }
+  // Always last, and always present: the configured channels are the fast
+  // ones, FormSubmit is the one that works on a deployment nobody has
+  // touched. Its presence is what keeps this list from ever being empty.
+  list.push({ name: 'formsubmit', send: postFormSubmit })
   return list
 }
 
 export function enquiryHandler(req, res) {
   const configured = channels()
 
-  // Nothing wired up: say so plainly and let the card fall back to mailto.
+  // Unreachable while FormSubmit sits in the list, and kept anyway: if a
+  // future change ever makes every channel conditional again, 501 is the
+  // honest answer and the card already knows how to handle it.
   if (configured.length === 0) {
     return res.status(501).json({ ok: false, reason: 'no delivery channel configured' })
   }
@@ -136,6 +203,9 @@ export function enquiryHandler(req, res) {
   const enquiry = {
     email: clean(payload.email, MAX_FIELD.email),
     need: clean(payload.need, MAX_FIELD.need),
+    // Added with the qualifying step in the card ("What's the content
+    // for?") — it is the field that tells Jelani how to quote.
+    for: clean(payload.for, MAX_FIELD.for),
     when: clean(payload.when, MAX_FIELD.when),
     note: clean(payload.note, MAX_FIELD.note),
   }
@@ -151,8 +221,8 @@ export function enquiryHandler(req, res) {
   // Answering before delivery would be faster, but a webhook that quietly
   // failed would leave the visitor looking at a success screen and the
   // enquiry nowhere Jelani checks. Wait, then tell the truth: any success
-  // is a success, total failure sends the card back to its mailto path
-  // with everything the visitor typed still filled in.
+  // is a success, total failure returns non-OK and the card says so on
+  // screen with everything the visitor typed still in front of them.
   return Promise.allSettled(configured.map((c) => c.send(enquiry).then(() => c.name))).then(
     (results) => {
       results.forEach((result, i) => {

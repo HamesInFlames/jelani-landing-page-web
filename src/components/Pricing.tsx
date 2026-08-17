@@ -3,11 +3,13 @@ import { GoldLink } from './ui/GoldButton'
 import { Reveal } from './ui/Reveal'
 
 /**
- * Video-editing packages. The model's personality is that the math never
- * changes — $100 an edit at every tier — so the section's job is to state
- * that plainly, not to merchandise it. No discount badges, no crossed-out
- * anchors, no "most popular": the quarterly card is distinguished by a
- * gold hairline and its included-strategy tag, nothing louder.
+ * The three ways to book him. The section's job is to state the price and
+ * stop talking, not to merchandise it — no discount badges, no crossed-out
+ * anchors, no "most popular". The quarterly partner card is distinguished
+ * by a gold hairline and its included-strategy tag, nothing louder.
+ *
+ * The per-edit figure the section used to open on came off 2026-08-17; see
+ * the pricing block in content/site.ts for why it must not come back.
  */
 export function Pricing() {
   const { eyebrow, title, blurb, tiers, cta, footnote } = site.pricing

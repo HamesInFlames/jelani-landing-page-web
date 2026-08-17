@@ -65,9 +65,25 @@ export const site = {
 
   hero: {
     eyebrow: 'Jelani-Issa Woods · Director of Photography · GTA',
-    // Fixed by the brief — do not rewrite without sign-off.
-    headline: 'Fast-turnaround creative for brand events.',
-    sub: 'I help brands and agencies turn events into content — recaps delivered while the moment still matters.',
+    /**
+     * Rewritten 2026-08-17 from the Studio Impetus 30-day playbook, signed
+     * off by James — this supersedes the "fixed by the brief" note that sat
+     * on the old line ("Fast-turnaround creative for brand events."). That
+     * line described the service; this one states the buyer's problem and
+     * the promise in the same breath. Two sentences on purpose: the layout
+     * is free to break them across lines.
+     */
+    headline: "Your activation is over in six hours. Your content shouldn't take three weeks.",
+    sub: 'I shoot brand activations, launches, and influencer events across the GTA — and get you a finished recap in 48–72 hours, stills the same day, and vertical cuts built for paid from the start.',
+    /**
+     * Small-type proof line under the sub. It rides the hero's CSS entrance
+     * with the rest of panel 1, so it paints with the prerendered markup and
+     * never waits on hydration.
+     * CONFIRM: public naming of Soluna, Canergy, and Reset Studio is the same
+     * sign-off the marquee below is waiting on. Bioderma, Camp Dreamwood, and
+     * Sportsnet are already public.
+     */
+    proof: 'Bioderma · Soluna · Canergy · Reset Studio · Camp Dreamwood · Featured on Sportsnet',
     primary: 'Book a call',
     secondary: 'See the work',
     /**
@@ -85,7 +101,40 @@ export const site = {
      */
     stages: [
       { id: 'deliver', line: 'Event recaps in 48–72 hours. Stills the same day. Vertical cuts ready for paid.' },
-      { id: 'proof', line: 'Sportsnet-featured. Founder of Studio Impetus. Toronto.' },
+      // Reframed 2026-08-17 to the playbook's credibility strip — the same
+      // three facts, but stated as what he has done rather than as a badge.
+      { id: 'proof', line: 'Toronto + GTA · Founder, Studio Impetus · Former agency DP & project manager' },
+    ],
+  },
+
+  /**
+   * The problem section — added 2026-08-17 from the playbook. It sits
+   * between the marquee and the work gallery because the page's job at that
+   * point is to name the thing the buyer has already lived through, before
+   * it starts showing off.
+   */
+  problem: {
+    eyebrow: 'The problem',
+    title: 'Most event content never runs.',
+    body: [
+      "You spend the budget. The room looks incredible. Then the footage sits in an edit queue, the recap lands two or three weeks later, and by the time it's ready the campaign has moved on.",
+      "The problem usually isn't the shooter. It's that nobody scoped the edit, nobody planned for vertical, and nobody was working to a deadline that matched how fast the moment actually expires.",
+      'I work backwards from the post date. Stills the same night, recap in 48–72 hours, vertical delivered alongside the horizontal — not as an afterthought when someone asks a week later.',
+    ],
+  },
+
+  /**
+   * Why me — added 2026-08-17 from the playbook, as its own block above
+   * About rather than a rewrite of About's opening. About is the bio; this
+   * is the argument, and the two do different jobs on the page.
+   */
+  whyMe: {
+    eyebrow: 'Why me',
+    title: 'A DP who came up as a project manager.',
+    body: [
+      "Toronto has no shortage of good shooters. What's harder to find is someone who scopes a job honestly, shows up early, and doesn't need managing on the day.",
+      "I came up through agency production at Visual Smugglers as a project manager and a DP — so I've sat on both sides of the brief. I know what it costs an agency when a freelancer over-promises, goes quiet, and delivers late. I built how I work around not being that person.",
+      'You get a written brief before the shoot. A real timeline, and I hit it. Horizontal and vertical from the same shoot, not a change order. And you can hand me a job and stop thinking about it.',
     ],
   },
 
@@ -117,13 +166,15 @@ export const site = {
     title: 'What I shoot, and how fast you get it back.',
     blurb:
       'Four ways brands and agencies bring me in. Every one of them ends with usable footage in your hands, not a project that drags.',
+    // Reframed 2026-08-17 per the playbook: each card now leads with what
+    // the buyer ends up with, not with what happens on the day.
     items: [
       {
         n: '01',
         title: 'Event video recaps',
-        body: 'A full recap cut from your activation, launch, or influencer event — shot, edited, and colour-graded to run as paid or organic.',
+        body: 'The recap your team can actually run. Cut so it works as paid, not just as a nice post.',
         // CONFIRM: turnaround commitments below are drafted, not yet approved by Jelani.
-        promise: '48–72 hour turnaround',
+        promise: '48–72 hours',
       },
       {
         n: '02',
@@ -132,21 +183,25 @@ export const site = {
         // retired ("behind the scenes film would incur a cost"), and one
         // operator cannot shoot photo and video at once ("if I'm on photo
         // there's nobody on video") — same-day both means a second shooter.
-        body: 'Dedicated stills coverage, retouched and delivered as a gallery your team can pull from all quarter. Photo and video on the same day is a two-shooter booking — one camera cannot cover both — so it is scoped with a second shooter up front.',
-        promise: 'Edited gallery in 72 hours',
+        // The scoping caveat survives the 2026-08-17 reframe: it is the one
+        // sentence here that stops a booking being mis-sold.
+        body: "A stills library that lasts the quarter. Social, PR, and paid can all pull from it, so you're not re-shooting product in October. Photo and video on the same day is a two-shooter booking — one camera cannot cover both — so it is scoped with a second shooter up front.",
+        promise: 'Gallery in 72 hours',
       },
       {
         n: '03',
         title: 'Second shooting',
-        body: 'Overflow support for agencies and in-house teams — a second camera that matches your lead shooter and needs no hand-holding on the day.',
+        body: "A second camera that matches your lead shooter, arrives early, and doesn't need briefing twice.",
         promise: 'Day rate, GTA-wide',
       },
       {
         n: '04',
         title: 'Quick-turnaround editing',
-        // CONFIRM: package pointer reflects the 2026-08-02 pricing drop.
-        body: 'Send me the footage and get back a finished cut: story, pacing, sound, colour. Vertical and horizontal versions from one edit. Fixed packages below — ten or twenty edits, $100 each.',
-        promise: 'Same-week delivery',
+        // The pointer to "ten or twenty edits, $100 each" came off with the
+        // per-unit pricing on 2026-08-17 — see the pricing block below for
+        // why the page no longer names a per-edit figure.
+        body: "You shot it, I'll finish it. Real story, pacing, sound and colour — not a trim and a LUT.",
+        promise: 'Same week',
       },
     ],
   },
@@ -482,41 +537,50 @@ export const site = {
   },
 
   /**
-   * Video-editing pricing, supplied by Jelani via James 2026-08-02.
-   * The model's rules are strict and load-bearing: two fixed tiers, no
-   * discounts, no in-between quantities; the quarterly package includes
-   * the quarter's branding strategy complimentary, precisely so the
-   * editing keeps being charged at full worth. Never add a discount
-   * badge, a crossed-out price, or a "most popular" label here.
-   * Coverage work (recaps, photo, second shooting) stays quote-per-project.
+   * Pricing, restructured 2026-08-17 per the playbook.
+   *
+   * REMOVED — the per-unit anchor: the "$100 an edit" title, the 10- and
+   * 20-edit tiers, and their "$100 per edit" feet. A page that opens on
+   * $100 teaches the buyer to price the work by the unit, and every
+   * conversation after that is an argument about how many units. The tiers
+   * below anchor on the engagement instead. The $100 figure is not gone
+   * from the business — it is a closing tool on a call, where it lands as a
+   * concession rather than as the headline number. Do not put it back on
+   * the page without James's call.
+   *
+   * The house rules are unchanged and still load-bearing: no discounts, no
+   * in-between quantities, and the quarterly partner includes the quarter's
+   * strategy complimentary precisely so the work keeps being charged at
+   * full worth. Never add a discount badge, a crossed-out price, or a "most
+   * popular" label here.
    */
   pricing: {
     eyebrow: 'Pricing',
-    title: "An edit costs $100. That's the whole model.",
+    title: 'Three ways to book me.',
     blurb:
-      'Video editing runs on fixed packages — no discounts, no in-between quantities, no negotiation theatre. Event coverage and photography are scoped per project through the card below.',
+      'Fixed packages — no discounts, no in-between quantities, no negotiation theatre. Where a job needs scoping, it gets scoped on the call before anyone talks money.',
     tiers: [
       {
-        id: 'ten',
-        name: '10 edits',
-        price: '$1,000',
-        body: 'For a launch, a campaign burst, or a month of consistent posting.',
-        foot: '$100 per edit',
+        id: 'coverage',
+        name: 'Event coverage',
+        price: 'From $2,000 / day',
+        body: 'Video, photo, or both. Recap in 48–72 hours, stills same day. Vertical included, not extra.',
+        foot: 'Per shoot day',
         featured: false,
       },
       {
-        id: 'twenty',
-        name: '20 edits',
-        price: '$2,000',
-        body: 'The same $100 an edit, doubled — for teams feeding more than one channel.',
-        foot: '$100 per edit',
+        id: 'package',
+        name: 'Content package',
+        price: 'From $1,000',
+        body: 'A block of finished cuts from footage you already have.',
+        foot: 'From your footage',
         featured: false,
       },
       {
         id: 'quarterly',
-        name: 'Quarterly',
+        name: 'Quarterly partner',
         price: 'From $3,000 / quarter',
-        body: 'Ten-plus videos a month with room to scale — and the quarter’s branding strategy comes with it, complimentary.',
+        body: "10+ videos a month, priority booking on event dates, strategy included. For teams who've stopped wanting to re-scope this every time.",
         foot: 'Strategy included',
         featured: true,
       },
@@ -524,18 +588,26 @@ export const site = {
     cta: 'Start with this',
     // CONFIRM: currency presentation (assumed CAD, Toronto client base).
     footnote:
-      'Prices in CAD. Event recaps, photo coverage, and second shooting are quoted per project.',
+      'Prices in CAD. Event coverage is quoted per project once the date, location, and deliverables are known.',
   },
 
   cta: {
     eyebrow: "Let's talk",
     title: 'Have an event coming up?',
-    sub: 'Three quick questions and I will come back to you with availability and a quote.',
+    sub: 'Four quick questions and I will come back to you with availability and a quote.',
     steps: [
       {
         id: 'need',
         question: 'What do you need?',
         options: ['Event recap', 'Photo coverage', 'Video + Photo bundle', 'Second shooter', 'Editing support'],
+      },
+      {
+        // Added 2026-08-17 per the playbook. The answer is what makes a
+        // quote possible before the call: paid and organic are not the same
+        // edit, and PR is not the same shot list.
+        id: 'for',
+        question: "What's the content for?",
+        options: ['Paid ads', 'Organic social', 'PR', 'Internal', 'Sales'],
       },
       {
         id: 'when',
@@ -555,6 +627,18 @@ export const site = {
       title: "Got it — I'll be in touch.",
       body: 'Your note is on its way to my inbox. Expect a reply within one business day.',
     },
+    /**
+     * Shown only when the send genuinely failed. The card used to fire the
+     * mailto and then claim success anyway, which on a phone meant the
+     * visitor saw a tick while nothing had been sent and nothing had
+     * opened. It still tries the mail client — that works on desktop — but
+     * it says what happened and leaves the answers on screen.
+     */
+    failure: {
+      title: "Couldn't send automatically.",
+      body: 'Your mail app should have opened with this filled in. If it did not, email me directly — copy the answers below straight into it.',
+      answersLabel: 'What you told me',
+    },
     fallbackNote: 'Prefer email?',
   },
 
@@ -569,9 +653,12 @@ export const site = {
  * enquiry.js), not a third party — no account, no per-submission quota, and
  * the visitor's details never leave our infrastructure.
  *
- * The route answers 501 until a delivery channel is configured on the
- * deployment (`ENQUIRY_WEBHOOK_URL`, or `RESEND_API_KEY` + `ENQUIRY_TO`),
- * and the card falls back to its prefilled mailto: on any non-OK response.
- * So this is safe to ship before the channel exists — see README §Enquiries.
+ * It needs no configuration: the route always relays through FormSubmit,
+ * so a deployment with no environment variables at all still delivers.
+ * `ENQUIRY_WEBHOOK_URL` and `RESEND_API_KEY` + `ENQUIRY_TO` are upgrades
+ * that run alongside it — see README §Enquiries.
+ *
+ * On any non-OK response the card still tries the visitor's mail client,
+ * but it shows its failure state rather than a success it did not earn.
  */
 export const FORM_ENDPOINT: string | null = '/api/enquiry'

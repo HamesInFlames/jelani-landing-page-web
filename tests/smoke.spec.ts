@@ -38,8 +38,9 @@ test('the page ships prerendered, not as an empty shell', async ({ request }) =>
 
   // The headline is split one <span> per word for the entrance, so match a
   // word rather than the whole sentence.
-  expect(html).toContain('Fast-turnaround')
+  expect(html).toContain('activation')
   expect(html).toContain('Duane Notice')
+  expect(html).toContain('Most event content never runs.')
   expect(html).toContain('Have an event coming up?')
   expect(html).not.toContain('<div id="root"></div>')
 
@@ -47,13 +48,22 @@ test('the page ships prerendered, not as an empty shell', async ({ request }) =>
   expect(html).not.toMatch(/<link rel="stylesheet"/)
 })
 
-test('hero renders the headline and both calls to action', async ({ page }) => {
+test('hero renders the headline, the proof line, and both calls to action', async ({ page }) => {
   // Exact match, not `toContainText`: the headline is split per word for the
   // entrance animation, and a collapsed separator silently glues words
   // together ("brandevents.") while still passing a loose assertion.
   expect((await page.getByRole('heading', { level: 1 }).innerText()).replace(/\s+/g, ' ')).toBe(
-    'Fast-turnaround creative for brand events.',
+    "Your activation is over in six hours. Your content shouldn't take three weeks.",
   )
+
+  // The proof line rides the hero's CSS entrance, so it must be legible
+  // without waiting on hydration or a scroll.
+  await expect(
+    page.getByText(
+      'Bioderma · Soluna · Canergy · Reset Studio · Camp Dreamwood · Featured on Sportsnet',
+    ),
+  ).toBeVisible()
+
   await expect(page.getByRole('link', { name: 'Book a call' }).first()).toHaveAttribute(
     'href',
     '#contact',
@@ -64,7 +74,7 @@ test('hero renders the headline and both calls to action', async ({ page }) => {
 test('every section is present and visible after scrolling', async ({ page }) => {
   await revealAll(page)
 
-  for (const id of ['work', 'services', 'about', 'contact']) {
+  for (const id of ['problem', 'work', 'services', 'why', 'about', 'contact']) {
     await expect(page.locator(`#${id}`)).toBeVisible()
   }
 
@@ -161,17 +171,39 @@ test('the beauty strip renders its four portraits with descriptive alt', async (
   await expect(page.getByRole('heading', { name: 'Luxury Villa UGC' })).toBeVisible()
 })
 
+test('the problem and why-me sections carry the playbook argument', async ({ page }) => {
+  await revealAll(page)
+
+  const problem = page.locator('#problem')
+  await expect(problem.getByRole('heading', { name: 'Most event content never runs.' })).toBeVisible()
+  await expect(problem.getByText(/I work backwards from the post date/)).toBeVisible()
+
+  const why = page.locator('#why')
+  await expect(
+    why.getByRole('heading', { name: 'A DP who came up as a project manager.' }),
+  ).toBeVisible()
+  await expect(why.getByText(/both sides of the brief/)).toBeVisible()
+})
+
 test('pricing states the fixed tiers and never discounts them', async ({ page }) => {
   await revealAll(page)
   const pricing = page.locator('#pricing')
 
-  for (const figure of ['$1,000', '$2,000', 'From $3,000 / quarter']) {
-    await expect(pricing.getByText(figure)).toBeVisible()
+  for (const figure of ['From $2,000 / day', 'From $1,000', 'From $3,000 / quarter']) {
+    await expect(pricing.getByText(figure, { exact: true })).toBeVisible()
   }
+
+  // The per-unit anchor came off on 2026-08-17 — a page that opens on $100
+  // an edit teaches the buyer to argue about unit counts. It is a closing
+  // tool on a call now, and must not creep back into public copy.
+  const anchors = (await pricing.textContent())!
+  expect(anchors).not.toContain('$100')
+  expect(anchors).not.toMatch(/per edit|10 edits|20 edits/i)
+  expect(await page.content()).not.toContain('$100')
 
   // Exactly one featured tier, distinguished by the included strategy.
   await expect(pricing.getByText('Strategy included', { exact: true })).toHaveCount(2) // tag + foot line
-  await expect(pricing.getByRole('heading', { name: 'Quarterly' })).toBeVisible()
+  await expect(pricing.getByRole('heading', { name: 'Quarterly partner' })).toBeVisible()
 
   // Guard against discount-language drift — the model's rule is no
   // discounts, ever, and copy edits must not soften it. Disclaiming them
@@ -192,7 +224,7 @@ test('no third-party embed loads until a card is clicked', async ({ page }) => {
   expect(await page.locator('iframe').count()).toBe(0)
 })
 
-test('the CTA card walks through its three steps and keeps a stable height', async ({ page }) => {
+test('the CTA card walks through its four steps and keeps a stable height', async ({ page }) => {
   const card = page.locator('#contact .card')
   await card.scrollIntoViewIfNeeded()
   await page.waitForTimeout(700)
@@ -201,6 +233,11 @@ test('the CTA card walks through its three steps and keeps a stable height', asy
 
   await expect(page.getByRole('heading', { name: 'What do you need?' })).toBeVisible()
   await page.getByRole('button', { name: 'Event recap' }).click()
+
+  // The qualifying step, added 2026-08-17: what the content is for is what
+  // makes a quote possible before the call happens.
+  await expect(page.getByRole('heading', { name: "What's the content for?" })).toBeVisible()
+  await page.getByRole('button', { name: 'Paid ads' }).click()
 
   await expect(page.getByRole('heading', { name: 'When do you need it?' })).toBeVisible()
   await page.getByRole('button', { name: 'This month' }).click()
@@ -242,9 +279,11 @@ test('scrolling the hero swaps in the later information panels', async ({ page }
   const hero = page.locator('#top')
   const runway = await hero.evaluate((el) => el.getBoundingClientRect().height)
 
-  // Panel 3 carries the proof line; it must be invisible at the top and
-  // legible once the visitor has scrolled through the hero.
-  const proof = page.getByText('Sportsnet-featured. Founder of Studio Impetus. Toronto.')
+  // Panel 3 carries the credibility strip; it must be invisible at the top
+  // and legible once the visitor has scrolled through the hero.
+  const proof = page.getByText(
+    'Toronto + GTA · Founder, Studio Impetus · Former agency DP & project manager',
+  )
   const opacityOf = async () =>
     Number(
       await proof.evaluate((el) => {
@@ -282,7 +321,7 @@ test('reduced motion gives a still hero, one viewport tall, with no autoplay', a
 
   // Panel 1's full copy reads without any scrolling theatre.
   expect((await page.getByRole('heading', { level: 1 }).innerText()).replace(/\s+/g, ' ')).toBe(
-    'Fast-turnaround creative for brand events.',
+    "Your activation is over in six hours. Your content shouldn't take three weeks.",
   )
 
   // No card preview plays either.
@@ -372,37 +411,89 @@ test('the enquiry flow offers the video + photo bundle', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Video + Photo bundle' })).toBeVisible()
 })
 
-test('the enquiry route is mounted, and says so when no channel is configured', async ({
+test('the enquiry route is mounted and has a delivery channel with no env vars', async ({
   request,
 }) => {
+  // Deliberately invalid: validation runs *after* the channel check and
+  // before any delivery, so a 400 proves the route is mounted (not 404),
+  // proves a channel is configured (a 501 would mean the list was empty —
+  // FormSubmit is meant to make that impossible), and sends nothing to
+  // anyone's inbox in the process.
   const res = await request.post('/api/enquiry', {
-    data: { email: 'lead@brand.com', need: 'Event recap' },
+    data: { email: 'not-an-address', need: 'Event recap' },
   })
 
-  // 404 would mean the route never mounted and the card's fallback is
-  // covering for a bug. 501 is the honest "not configured yet" the card is
-  // built to handle — see server/enquiry.js.
-  expect(res.status()).toBe(501)
+  expect(res.status()).toBe(400)
 })
 
-test('the enquiry card keeps working while delivery is unconfigured', async ({ page }) => {
+test('the card shows success only on a real 2xx from our server', async ({ page }) => {
+  // Stubbed at the browser rather than let through: a live POST would relay
+  // an invented lead to Jelani's actual inbox.
+  const posted: Record<string, string>[] = []
+  await page.route('**/api/enquiry', async (route) => {
+    posted.push(route.request().postDataJSON())
+    await route.fulfill({ status: 200, json: { ok: true } })
+  })
+
   const card = page.locator('#contact .card')
   await card.scrollIntoViewIfNeeded()
   await page.waitForTimeout(700)
 
   await page.getByRole('button', { name: 'Event recap' }).click()
+  await page.getByRole('button', { name: 'Paid ads' }).click()
   await page.getByRole('button', { name: 'This month' }).click()
   await page.locator('#cta-email').fill('lead@brand.com')
-
-  // The mailto handoff would navigate the page away; intercept it so the
-  // assertion is about the fallback firing, not about the mail client.
-  const handoff = page.waitForRequest((r) => r.url().startsWith('mailto:'), { timeout: 5000 })
   await page.getByRole('button', { name: 'Send it' }).click()
 
   await expect(page.getByText("Got it — I'll be in touch.")).toBeVisible()
+
+  // Every answer reaches the server, including the qualifying step.
+  expect(posted).toHaveLength(1)
+  expect(posted[0]).toMatchObject({
+    need: 'Event recap',
+    for: 'Paid ads',
+    when: 'This month',
+    email: 'lead@brand.com',
+  })
+})
+
+test('a failed send says so, and keeps the visitor’s answers on screen', async ({ page }) => {
+  await page.route('**/api/enquiry', (route) =>
+    route.fulfill({ status: 502, json: { ok: false, reason: 'delivery failed' } }),
+  )
+
+  const card = page.locator('#contact .card')
+  await card.scrollIntoViewIfNeeded()
+  await page.waitForTimeout(700)
+
+  await page.getByRole('button', { name: 'Event recap' }).click()
+  await page.getByRole('button', { name: 'Paid ads' }).click()
+  await page.getByRole('button', { name: 'This month' }).click()
+  await page.locator('#cta-email').fill('lead@brand.com')
+  await page.locator('#cta-note').fill('Launch night, Aug 20')
+
+  // The mailto handoff would navigate the page away; intercept it so the
+  // assertion is about the fallback state, not about the mail client.
+  const handoff = page.waitForRequest((r) => r.url().startsWith('mailto:'), { timeout: 5000 })
+  await page.getByRole('button', { name: 'Send it' }).click()
+
+  // The honest state, not the tick: claiming success here is exactly the
+  // bug this replaced.
+  await expect(page.getByText("Couldn't send automatically.")).toBeVisible()
+  await expect(page.getByText("Got it — I'll be in touch.")).toHaveCount(0)
+
+  // The address is tappable, and nothing the visitor typed is lost.
+  const fallback = page.locator('#contact .card').getByRole('link', {
+    name: 'jelaniwoods@gmail.com',
+  })
+  await expect(fallback).toHaveAttribute('href', 'mailto:jelaniwoods@gmail.com')
+  for (const answer of ['Event recap', 'Paid ads', 'This month', 'lead@brand.com', 'Launch night, Aug 20']) {
+    await expect(card.getByText(answer, { exact: true })).toBeVisible()
+  }
+
   await handoff.catch(() => {
     // Chromium may swallow the mailto rather than emit a request; the
-    // success state above is the behaviour that matters to the visitor.
+    // fallback state above is the behaviour that matters to the visitor.
   })
 })
 

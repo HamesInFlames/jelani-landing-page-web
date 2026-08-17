@@ -4,8 +4,12 @@
  *
  * The behaviour that matters here is not the happy path — it is that a lead
  * is never silently swallowed. Every failure mode must produce a non-OK
- * status, because that is the signal the card uses to fall back to the
- * visitor's mail client with their answers still filled in.
+ * status, because that is the signal the card uses to stop claiming success
+ * and show the visitor their answers with the address to send them to.
+ *
+ * Since FormSubmit became the always-present channel, every submission
+ * makes a request whether or not anything is configured, so `fetch` is
+ * mocked in every test that gets as far as delivery.
  */
 import test from 'node:test'
 import assert from 'node:assert/strict'
@@ -38,21 +42,103 @@ function fakeRes() {
 
 const req = (body, ip = '1.2.3.4') => ({ body, ip })
 
-test('unconfigured deployment reports 501 so the card falls back to mailto', async () => {
+/** FormSubmit's own success shape: 200, and `"true"` as a string, not a boolean. */
+const formSubmitOk = { ok: true, status: 200, json: async () => ({ success: 'true' }) }
+
+/** Everything posted to FormSubmit, from a run's recorded calls. */
+const toFormSubmit = (calls) => calls.filter((c) => String(c.url).includes('formsubmit.co'))
+const toWebhook = (calls) => calls.filter((c) => !String(c.url).includes('formsubmit.co'))
+
+test('an unconfigured deployment still delivers, through FormSubmit', async (t) => {
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, body: JSON.parse(init.body) })
+    return formSubmitOk
+  })
+
+  // No environment variables at all — the state a fresh Railway deploy is in.
+  const handler = await loadHandler()
+  const res = fakeRes()
+
+  await handler(
+    req({
+      email: 'lead@brand.com',
+      need: 'Event recap',
+      for: 'Paid ads',
+      when: 'This month',
+      note: 'Aug 20',
+    }),
+    res,
+  )
+
+  assert.equal(res.statusCode, 200)
+  assert.equal(res.body.ok, true)
+
+  const [call] = toFormSubmit(calls)
+  assert.ok(call, 'FormSubmit is in the channel list with nothing configured')
+  assert.equal(call.url, 'https://formsubmit.co/ajax/jelaniwoods@gmail.com')
+
+  // The relay has to arrive readable, and reply-to has to be the visitor so
+  // answering the notification answers the lead.
+  assert.equal(call.body._subject, 'New enquiry — Event recap')
+  assert.equal(call.body._replyto, 'lead@brand.com')
+  assert.equal(call.body._captcha, 'false')
+  assert.equal(call.body._template, 'box')
+  assert.equal(call.body['What they need'], 'Event recap')
+  assert.equal(call.body["What it's for"], 'Paid ads')
+  assert.equal(call.body.Timing, 'This month')
+  assert.equal(call.body.Note, 'Aug 20')
+})
+
+test('ENQUIRY_TO redirects the FormSubmit relay', async (t) => {
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, body: JSON.parse(init.body) })
+    return formSubmitOk
+  })
+
+  const handler = await loadHandler({ ENQUIRY_TO: 'bookings@studioimpetus.ca' })
+  await handler(req({ email: 'lead@brand.com' }), fakeRes())
+
+  assert.equal(toFormSubmit(calls)[0].url, 'https://formsubmit.co/ajax/bookings@studioimpetus.ca')
+})
+
+test('FormSubmit answering 200 with success:"false" is a failure, not a delivery', async (t) => {
+  // What an address that has never been activated actually returns.
+  t.mock.method(globalThis, 'fetch', async () => ({
+    ok: true,
+    status: 200,
+    json: async () => ({ success: 'false', message: 'The email address is not activated' }),
+  }))
+
   const handler = await loadHandler()
   const res = fakeRes()
 
   await handler(req({ email: 'lead@brand.com' }), res)
 
-  assert.equal(res.statusCode, 501)
-  assert.equal(res.body.ok, false)
+  assert.equal(res.statusCode, 502)
 })
 
-test('a valid enquiry is delivered and acknowledged', async (t) => {
-  const sent = []
+test('a non-2xx from FormSubmit is a failure too', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => ({
+    ok: false,
+    status: 429,
+    json: async () => ({ success: 'false' }),
+  }))
+
+  const handler = await loadHandler()
+  const res = fakeRes()
+
+  await handler(req({ email: 'lead@brand.com' }), res)
+
+  assert.equal(res.statusCode, 502)
+})
+
+test('a configured channel runs alongside FormSubmit, not instead of it', async (t) => {
+  const calls = []
   t.mock.method(globalThis, 'fetch', async (url, init) => {
-    sent.push({ url, body: JSON.parse(init.body) })
-    return { ok: true, status: 200 }
+    calls.push({ url, body: JSON.parse(init.body) })
+    return formSubmitOk
   })
 
   const handler = await loadHandler({ ENQUIRY_WEBHOOK_URL: 'https://hooks.example.com/x' })
@@ -64,9 +150,25 @@ test('a valid enquiry is delivered and acknowledged', async (t) => {
   )
 
   assert.equal(res.statusCode, 200)
-  assert.equal(sent.length, 1)
-  assert.equal(sent[0].body.email, 'lead@brand.com')
-  assert.match(sent[0].body.text, /Event recap/)
+  assert.equal(toWebhook(calls).length, 1)
+  assert.equal(toFormSubmit(calls).length, 1)
+  assert.equal(toWebhook(calls)[0].body.email, 'lead@brand.com')
+  assert.match(toWebhook(calls)[0].body.text, /Event recap/)
+})
+
+test('the qualifying answer reaches every channel', async (t) => {
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, body: JSON.parse(init.body) })
+    return formSubmitOk
+  })
+
+  const handler = await loadHandler({ ENQUIRY_WEBHOOK_URL: 'https://hooks.example.com/x' })
+  await handler(req({ email: 'lead@brand.com', for: 'Organic social' }), fakeRes())
+
+  assert.equal(toWebhook(calls)[0].body.for, 'Organic social')
+  assert.match(toWebhook(calls)[0].body.text, /What it's for: Organic social/)
+  assert.equal(toFormSubmit(calls)[0].body["What it's for"], 'Organic social')
 })
 
 test('a failed delivery reports 502 rather than a false success', async (t) => {
@@ -96,7 +198,7 @@ test('an unreachable webhook reports 502 rather than throwing', async (t) => {
 test('one channel succeeding is enough', async (t) => {
   t.mock.method(globalThis, 'fetch', async (url) => {
     if (String(url).includes('resend')) throw new Error('resend down')
-    return { ok: true, status: 200 }
+    return formSubmitOk
   })
 
   const handler = await loadHandler({
@@ -145,7 +247,7 @@ test('a filled honeypot is dropped silently and never delivered', async (t) => {
 })
 
 test('a flood from one address is capped, and other visitors are unaffected', async (t) => {
-  t.mock.method(globalThis, 'fetch', async () => ({ ok: true, status: 200 }))
+  t.mock.method(globalThis, 'fetch', async () => formSubmitOk)
 
   const handler = await loadHandler({ ENQUIRY_WEBHOOK_URL: 'https://hooks.example.com/x' })
   const codes = []
@@ -165,26 +267,27 @@ test('a flood from one address is capped, and other visitors are unaffected', as
 })
 
 test('overlong fields are truncated, not rejected', async (t) => {
-  const sent = []
-  t.mock.method(globalThis, 'fetch', async (_url, init) => {
-    sent.push(JSON.parse(init.body))
-    return { ok: true, status: 200 }
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, body: JSON.parse(init.body) })
+    return formSubmitOk
   })
 
   const handler = await loadHandler({ ENQUIRY_WEBHOOK_URL: 'https://hooks.example.com/x' })
   const res = fakeRes()
 
-  await handler(req({ email: 'lead@brand.com', note: 'x'.repeat(5000) }), res)
+  await handler(req({ email: 'lead@brand.com', note: 'x'.repeat(5000), for: 'y'.repeat(500) }), res)
 
   assert.equal(res.statusCode, 200)
-  assert.equal(sent[0].note.length, 2000)
+  assert.equal(toWebhook(calls)[0].body.note.length, 2000)
+  assert.equal(toWebhook(calls)[0].body.for.length, 80)
 })
 
 test('Discord and Slack each get the payload shape they accept', async (t) => {
-  const shapes = []
-  t.mock.method(globalThis, 'fetch', async (_url, init) => {
-    shapes.push(JSON.parse(init.body))
-    return { ok: true, status: 200 }
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, body: JSON.parse(init.body) })
+    return formSubmitOk
   })
 
   for (const url of [
@@ -195,6 +298,10 @@ test('Discord and Slack each get the payload shape they accept', async (t) => {
     await handler(req({ email: 'lead@brand.com' }), fakeRes())
   }
 
+  // FormSubmit rides along on every submission now, so pick out the two
+  // webhook posts rather than trusting call order.
+  const shapes = toWebhook(calls).map((c) => c.body)
+  assert.equal(shapes.length, 2)
   assert.ok(shapes[0].content, 'Discord takes `content`')
   assert.equal(shapes[0].text, undefined)
   assert.ok(shapes[1].text, 'Slack takes `text`')
