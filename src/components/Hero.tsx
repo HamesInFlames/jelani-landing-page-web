@@ -170,7 +170,7 @@ export function Hero() {
               </h1>
 
               <p
-                className="hero-rise mt-7 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl"
+                className="hero-rise mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:mt-7 sm:text-xl"
                 style={{ animationDelay: `${0.1 + words.length * 0.05}s` }}
               >
                 {site.hero.sub}
@@ -180,14 +180,18 @@ export function Hero() {
                   of panel 1 — it is prerendered markup and must not wait for
                   hydration to appear. */}
               <p
-                className="hero-rise mt-6 max-w-2xl text-xs font-semibold uppercase tracking-[0.18em] text-gold-soft sm:text-sm"
+                className="hero-rise mt-5 max-w-2xl text-xs font-semibold uppercase tracking-[0.18em] text-gold-soft sm:mt-6 sm:text-sm"
                 style={{ animationDelay: `${0.15 + words.length * 0.05}s` }}
               >
                 {site.hero.proof}
               </p>
 
+              {/* Margins tighten on phones so the primary call to action
+                  clears the fold: at the desktop spacing it landed a few
+                  pixels under the bottom of a 390×664 iPhone viewport, which
+                  is the one place the button most needs to be visible. */}
               <div
-                className="hero-rise mt-9 flex flex-wrap items-center gap-3"
+                className="hero-rise mt-7 flex flex-wrap items-center gap-3 sm:mt-9"
                 style={{ animationDelay: `${0.2 + words.length * 0.05}s` }}
               >
                 <GoldLink href="#contact">{site.hero.primary}</GoldLink>
