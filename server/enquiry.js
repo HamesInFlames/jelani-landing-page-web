@@ -131,7 +131,7 @@ async function sendEmail(enquiry) {
  * Readable keys, not our field names: whatever comes out the other end is
  * what Jelani reads in his inbox.
  */
-async function postFormSubmit(enquiry) {
+async function postFormSubmit(enquiry, origin) {
   // The address goes into the path unescaped, as FormSubmit documents it —
   // `@` is legal in a path segment, and percent-encoding it is not something
   // their endpoint promises to undo.
@@ -139,7 +139,18 @@ async function postFormSubmit(enquiry) {
 
   const res = await fetch(`https://formsubmit.co/ajax/${to}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      // FormSubmit refuses any request that arrives without browser origin
+      // headers, answering "Make sure you open this page through a web
+      // server, FormSubmit will not work in pages browsed as HTML files."
+      // That message is about a missing Referer, not about HTML files, and
+      // a server-to-server fetch never sends one. We forward the origin the
+      // visitor actually submitted from, so the header names the real
+      // deployment rather than anything hardcoded here.
+      ...(origin ? { Origin: origin, Referer: `${origin}/` } : {}),
+    },
     body: JSON.stringify({
       _subject: `New enquiry — ${enquiry.need || 'website'}`,
       _replyto: enquiry.email,
@@ -173,7 +184,22 @@ async function postFormSubmit(enquiry) {
   }
 }
 
-function channels() {
+/**
+ * The URL the visitor submitted from, for FormSubmit's benefit.
+ *
+ * A browser sends `Origin` on a cross-document POST, but we cannot rely on
+ * it, so the host header is the fallback — behind Railway's TLS termination
+ * the scheme only survives in `x-forwarded-proto`.
+ */
+function siteOrigin(req) {
+  const headers = req.headers ?? {}
+  if (headers.origin) return headers.origin
+  if (!headers.host) return null
+  const proto = String(headers['x-forwarded-proto'] || 'https').split(',')[0].trim()
+  return `${proto}://${headers.host}`
+}
+
+function channels(origin) {
   const list = []
   if (process.env.ENQUIRY_WEBHOOK_URL) {
     list.push({ name: 'webhook', send: (e) => postWebhook(process.env.ENQUIRY_WEBHOOK_URL, e) })
@@ -184,12 +210,12 @@ function channels() {
   // Always last, and always present: the configured channels are the fast
   // ones, FormSubmit is the one that works on a deployment nobody has
   // touched. Its presence is what keeps this list from ever being empty.
-  list.push({ name: 'formsubmit', send: postFormSubmit })
+  list.push({ name: 'formsubmit', send: (e) => postFormSubmit(e, origin) })
   return list
 }
 
 export function enquiryHandler(req, res) {
-  const configured = channels()
+  const configured = channels(siteOrigin(req))
 
   // Unreachable while FormSubmit sits in the list, and kept anyway: if a
   // future change ever makes every channel conditional again, 501 is the

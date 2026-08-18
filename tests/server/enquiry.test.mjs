@@ -40,7 +40,7 @@ function fakeRes() {
   return res
 }
 
-const req = (body, ip = '1.2.3.4') => ({ body, ip })
+const req = (body, ip = '1.2.3.4', headers = {}) => ({ body, ip, headers })
 
 /** FormSubmit's own success shape: 200, and `"true"` as a string, not a boolean. */
 const formSubmitOk = { ok: true, status: 200, json: async () => ({ success: 'true' }) }
@@ -306,4 +306,50 @@ test('Discord and Slack each get the payload shape they accept', async (t) => {
   assert.equal(shapes[0].text, undefined)
   assert.ok(shapes[1].text, 'Slack takes `text`')
   assert.equal(shapes[1].content, undefined)
+})
+
+/**
+ * FormSubmit rejects any request without browser origin headers, answering
+ * "Make sure you open this page through a web server…" — a message about a
+ * missing Referer rather than about HTML files. A server-to-server fetch
+ * sends neither header, which is what silently blocked every enquiry on the
+ * first deploy, so these two tests pin the headers in place.
+ */
+test('the visitor origin is forwarded to FormSubmit', async (t) => {
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, headers: init.headers })
+    return formSubmitOk
+  })
+
+  const handler = await loadHandler()
+  await handler(
+    req({ email: 'lead@brand.com' }, '1.2.3.4', { origin: 'https://jelaniwoods.tv' }),
+    fakeRes(),
+  )
+
+  const { headers } = toFormSubmit(calls)[0]
+  assert.equal(headers.Origin, 'https://jelaniwoods.tv')
+  assert.equal(headers.Referer, 'https://jelaniwoods.tv/')
+})
+
+test('with no Origin header the origin is rebuilt from the forwarded host', async (t) => {
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, headers: init.headers })
+    return formSubmitOk
+  })
+
+  const handler = await loadHandler()
+  await handler(
+    req({ email: 'lead@brand.com' }, '1.2.3.4', {
+      host: 'jelaniwoods.up.railway.app',
+      'x-forwarded-proto': 'https',
+    }),
+    fakeRes(),
+  )
+
+  const { headers } = toFormSubmit(calls)[0]
+  assert.equal(headers.Origin, 'https://jelaniwoods.up.railway.app')
+  assert.equal(headers.Referer, 'https://jelaniwoods.up.railway.app/')
 })
