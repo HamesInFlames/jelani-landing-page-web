@@ -96,9 +96,12 @@ from the moment the event ends.
 
 | Deliverable | Delivered within |
 |---|---|
-| Event video recap | 48–72 hours |
-| Photo gallery | 72 hours |
+| Event video recap | 48 hours |
+| Photo gallery | 24 hours |
 | Edited video from supplied footage | Same week |
+
+A deadline tighter than these is a rush booking: it means clearing the
+following day, and it is quoted accordingly.
 
 If something is going to be late, you will hear it from me first, with a
 new date — not silence.

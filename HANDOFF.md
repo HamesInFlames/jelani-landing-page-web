@@ -17,7 +17,9 @@
 
 ## 1. Goal & positioning
 
-One job: get brands and agencies to **book a call**. Every section funnels to the CTA.
+One job: get brands and agencies to **enquire**. Every section funnels to the CTA.
+
+> **Superseded 2026-08-18 (Phase 9).** This line read "get brands and agencies to **book a call**" until Jelani rejected that funnel outright: he does not take free discovery calls, and money is discussed before a call is booked. The page now runs enquiry card → short call that takes payment → creative brief. The goal is unchanged; the ask is an enquiry, not a call. See `HANDOFF-PHASE9.md`.
 
 - **Audience:** brands/agencies running influencer-marketing events needing fast-turnaround video/photo recaps; agencies hiring second shooters; in-house teams needing overflow creative.
 - **Scope:** creative services only. **No fitness/bodybuilding content anywhere on the page.** (Client's public social footprint is gym-heavy; this site is the deliberate commercial front door that repositions him.)

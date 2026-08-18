@@ -26,6 +26,24 @@ polish the phrasing on our side without changing your meaning.
 > - **Logo:** plain-text wordmark confirmed fine ("use plain text colors are
 >   fine") — the site already does this.
 
+> **Update — 2026-08-18.** Your afternoon Discord messages are applied, and
+> they changed more than wording — skip these below:
+> - **§2/§4 turnarounds:** galleries now say **24 hours** and recaps **48**,
+>   everywhere on the page ("Gallery in 24. Photo will always be our fastest
+>   service"). The old 72-hour numbers are gone from the site, the metadata,
+>   and the working agreement.
+> - **§4 rush bookings:** your price-tag point is on the page once, in the
+>   Services intro, so a next-morning deadline reads as a premium booking
+>   rather than something included.
+> - **§5 the dash:** "the '–' after DP is very AI coded" — removed, and the
+>   habit was thinned across the rest of the page's writing.
+> - **§9 the funnel:** rebuilt around your sequence. No more "Book a call"
+>   button and no free twenty-minute consult; it is now enquiry form → short
+>   call that takes payment and books the brief.
+> - **§8 pricing:** this section was still describing the old $100-an-edit
+>   model, which came off the site on 2026-08-17. It now quotes what is
+>   actually shown.
+
 ---
 
 ## 1. The basics
@@ -50,15 +68,14 @@ polish the phrasing on our side without changing your meaning.
 ## 2. The opening screen (hero)
 
 **Currently says** (headline rewritten 2026-08-17 with James from the
-30-day playbook; the delivery clause was corrected 2026-08-18 — "stills
-the same day" came out everywhere because it clashed with your two-shooter
-correction and the 72-hour gallery promise):
+30-day playbook; the delivery line now carries your 2026-08-18 numbers, and
+lost its dash in the same pass):
 > JELANI-ISSA WOODS · DIRECTOR OF PHOTOGRAPHY · GTA
 > **Your activation is over in six hours. Your content shouldn't take
 > three weeks.**
 > I shoot brand activations, launches, and influencer events across the
-> GTA — and get you a finished recap in 48–72 hours, an edited gallery in
-> 72, and vertical cuts built for paid from the start.
+> GTA. You get a finished recap in 48 hours, an edited gallery in 24, and
+> vertical cuts built for paid from the start.
 > BIODERMA · SOLUNA · CANERGY · RESET STUDIO · KILANI · CAMP DREAMWOOD ·
 > FEATURED ON SPORTSNET
 
@@ -68,8 +85,9 @@ _______________________________________________
 
 As you scroll, two more short panels appear over your footage. Drafts:
 
-- Panel 2 (what you deliver): *"Event recaps in 48–72 hours. Edited
-  galleries in 72. Vertical cuts ready for paid."*
+- Panel 2 (what you deliver): *"Edited galleries in 24 hours. Event recaps
+  in 48. Vertical cuts ready for paid."* — the gallery leads, since it is
+  the faster promise.
   ☐ ✅ Keep  ☐ Change: ______________________________
 - Panel 3 (the close): *"Toronto + GTA. Founder, Studio Impetus. Former
   agency DP & project manager."*
@@ -95,13 +113,23 @@ or correct each:
 
 | Service | Promise shown | Your correction |
 |---|---|---|
-| Event video recaps | 48–72 hour turnaround | |
-| Photo coverage | Edited gallery in 72 hours | |
+| Event video recaps | 48 hours | |
+| Photo coverage | Gallery in 24 hours | |
 | Second shooting | Day rate, GTA-wide | |
 | Quick-turnaround editing | Same-week delivery | |
 
-The photo card also says: *"Book photo and video together and a
-behind-the-scenes film is included, free."* — your bundle offer.
+The first two are your 2026-08-18 numbers, already applied. The rush caveat
+you raised is stated once, in the Services intro:
+> Need it faster? A hard next-morning deadline is a rush booking, and it's
+> priced like one.
+
+☐ ✅ Keep  ☐ Change: ______________________________
+
+The photo card still carries the two-shooter caveat you gave us on
+2026-08-05, now that the gallery is faster:
+> Photo and video on the same day is a two-shooter booking: one camera
+> cannot cover both, so it is scoped with a second shooter up front.
+
 ☐ ✅ Keep  ☐ Change: ______________________________
 
 ## 5. About you
@@ -172,24 +200,60 @@ a new one cut from recent brand work — say the word and it goes in.
 
 ## 8. Pricing (video editing)
 
-**Currently shows:** 10 edits — $1,000 · 20 edits — $2,000 · Quarterly from
-$3,000/quarter (min 10 videos/month) with the quarter's branding strategy
-included complimentary. No discounts anywhere, by your rule. Headline:
-*"An edit costs $100. That's the whole model."*
+**Currently shows** (restructured 2026-08-17 — the per-edit price came off
+the page, because opening on $100 teaches a buyer to argue about how many
+units they need; it is still yours to use as a closing move on a call):
+
+| Package | Price shown | What it says |
+|---|---|---|
+| Event coverage | From $2,000 / day | Video, photo, or both. Recap in 48 hours, gallery in 24. Vertical included, not extra. |
+| Content package | From $1,000 | A block of finished cuts from footage you already have. |
+| Quarterly partner | From $3,000 / quarter | 10+ videos a month, priority booking on event dates, strategy included. |
+
+The intro line above them reads:
+> Fixed packages — no discounts, no in-between quantities, no negotiation
+> theatre. Pick one, and a ten-minute call locks the date and the details.
 
 - ☐ ✅ All correct
 - Currency: we wrote **"Prices in CAD."** — correct? ☐ Yes ☐ No: ______
-- What counts as **one edit** (rough length / revision rounds / who supplies
-  footage)? One sentence so we can answer it if asked:
-  _______________________________________________
-- One line on what the **quarterly branding strategy** actually includes:
+- One line on what the **quarterly branding strategy** actually includes, so
+  we can answer it if asked:
   _______________________________________________
 
-## 9. The enquiry card (how people book you)
+## 9. How people book you (the funnel)
 
-Buttons currently offered: *Event recap · Photo coverage · Video + Photo
-bundle · Second shooter · Editing support*, then *This month / Next month /
-Just exploring*, then their email.
+Rebuilt 2026-08-18 on the sequence you described: they fill in the enquiry
+card, you reply with a price, and a short call takes the payment and books
+the creative brief. **The page never promises a free call** — the old
+"Book a call" button and the twenty-minute consult are gone. We also did
+*not* print "calls don't happen until they pay" anywhere; to someone landing
+on the site cold it reads as a slammed door, and the four steps below get
+the same point across. Say the word if you want it stated outright.
+
+The button in the header and under the headline now reads **"Start a
+booking"** (it scrolls to the enquiry card).
+☐ ✅ Keep  ☐ Change: ______________________________
+
+The four steps now read:
+
+| # | Step | What it says |
+|---|---|---|
+| 01 | Tell me what you need | The enquiry card below: what the event is, who the content is for, and where it will run. Takes a minute. |
+| 02 | Lock it in | A ten-minute call, not a pitch. We confirm the package, payment holds your date, and your creative brief session goes in the calendar. |
+| 03 | Creative brief | Before the shoot, you get a written brief — goal, roles, locations, talent, budget — so the day is planned, not improvised. |
+| 04 | Shoot and delivery | I show up early, shoot the plan, and catch the moments it could not predict. Then the cuts come back in days, not weeks, horizontal and vertical from the same shoot. |
+
+☐ ✅ Keep  ☐ Change: ______________________________
+
+- **Stripe:** payment happens on your call, not on the website. If you'd
+  rather people paid a deposit online before the call, say so and we will
+  build it: ☐ Keep as is ☐ Add online payment
+
+The card itself asks: *Event recap · Photo coverage · Video + Photo
+bundle · Second shooter · Editing support*, then *What's the content for?*,
+then *This month / Next month / Just exploring*, then their email. It opens
+with: *"Four quick questions. I'll come back within a business day with the
+price and a time to lock it in."*
 ☐ ✅ Keep  ☐ Change: ______________________________
 
 Enquiries currently arrive by **email to jelaniwoods@gmail.com**. Confirm
