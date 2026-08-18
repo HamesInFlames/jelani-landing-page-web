@@ -49,23 +49,30 @@ polish the phrasing on our side without changing your meaning.
 
 ## 2. The opening screen (hero)
 
-**Currently says:**
+**Currently says** (headline rewritten 2026-08-17 with James from the
+30-day playbook; the delivery clause was corrected 2026-08-18 — "stills
+the same day" came out everywhere because it clashed with your two-shooter
+correction and the 72-hour gallery promise):
 > JELANI-ISSA WOODS · DIRECTOR OF PHOTOGRAPHY · GTA
-> **Fast-turnaround creative for brand events.**
-> I help brands and agencies turn events into content — recaps delivered
-> while the moment still matters.
+> **Your activation is over in six hours. Your content shouldn't take
+> three weeks.**
+> I shoot brand activations, launches, and influencer events across the
+> GTA — and get you a finished recap in 48–72 hours, an edited gallery in
+> 72, and vertical cuts built for paid from the start.
+> BIODERMA · SOLUNA · CANERGY · RESET STUDIO · KILANI · CAMP DREAMWOOD ·
+> FEATURED ON SPORTSNET
 
 ☐ ✅ Keep as is  ☐ Change to:
 
 _______________________________________________
 
-As you scroll, two more short lines appear over your footage. Drafts:
+As you scroll, two more short panels appear over your footage. Drafts:
 
-- Line 2 (what you deliver): *"Event recaps in 48–72 hours. Stills the same
-  day. Vertical cuts ready for paid."*
+- Panel 2 (what you deliver): *"Event recaps in 48–72 hours. Edited
+  galleries in 72. Vertical cuts ready for paid."*
   ☐ ✅ Keep  ☐ Change: ______________________________
-- Line 3 (the close): *"Sportsnet-featured. Founder of Studio Impetus.
-  Toronto."*
+- Panel 3 (the close): *"Toronto + GTA. Founder, Studio Impetus. Former
+  agency DP & project manager."*
   ☐ ✅ Keep  ☐ Change: ______________________________
 
 ## 3. Client names we show (important — one tick each)

@@ -74,16 +74,21 @@ export const site = {
      * is free to break them across lines.
      */
     headline: "Your activation is over in six hours. Your content shouldn't take three weeks.",
-    sub: 'I shoot brand activations, launches, and influencer events across the GTA — and get you a finished recap in 48–72 hours, stills the same day, and vertical cuts built for paid from the start.',
+    // The middle clause read "stills the same day" until 2026-08-18 — the
+    // same unkeepable promise retired from panel 2 that day: Jelani's
+    // 2026-08-05 correction makes an edited gallery a 72-hour promise, and
+    // same-day stills beside video a second-shooter booking.
+    sub: 'I shoot brand activations, launches, and influencer events across the GTA — and get you a finished recap in 48–72 hours, an edited gallery in 72, and vertical cuts built for paid from the start.',
     /**
      * Small-type proof line under the sub. It rides the hero's CSS entrance
      * with the rest of panel 1, so it paints with the prerendered markup and
      * never waits on hydration.
      * CONFIRM: public naming of Soluna, Canergy, and Reset Studio is the same
-     * sign-off the marquee below is waiting on. Bioderma, Camp Dreamwood, and
-     * Sportsnet are already public.
+     * sign-off the marquee below is waiting on. Bioderma, Camp Dreamwood,
+     * Sportsnet, and Kilani (signed off via Discord 2026-08-05, added here
+     * 2026-08-18) are already public.
      */
-    proof: 'Bioderma · Soluna · Canergy · Reset Studio · Camp Dreamwood · Featured on Sportsnet',
+    proof: 'Bioderma · Soluna · Canergy · Reset Studio · Kilani · Camp Dreamwood · Featured on Sportsnet',
     primary: 'Book a call',
     secondary: 'See the work',
     /**
@@ -97,13 +102,39 @@ export const site = {
      * Information panels staged across the pinned hero. Panel 1 is the
      * prerendered first paint and carries the LCP headline; 2 and 3 arrive
      * on scroll. Under reduced motion only panel 1 shows.
-     * CONFIRM: panels 2 and 3 are drafted — see CONTENT-INTAKE.md §2.
+     *
+     * Each stage is a stack of short beat lines. `*…*` marks the one span
+     * per line Hero.tsx renders in gold — key figures only, by brand rule.
+     *
+     * Revised 2026-08-18: "Stills the same day" is retired — it contradicted
+     * the 2026-08-05 two-shooter correction (an edited gallery is a 72-hour
+     * promise, and same-day stills beside video is a second-shooter
+     * booking). The Kilani credit signed off 2026-08-05 lives in the
+     * panel-1 proof strip above; the close keeps the playbook's
+     * credibility strip.
+     * CONFIRM: panels 2 and 3 remain drafted — see CONTENT-INTAKE.md §2.
      */
     stages: [
-      { id: 'deliver', line: 'Event recaps in 48–72 hours. Stills the same day. Vertical cuts ready for paid.' },
+      {
+        id: 'deliver',
+        lines: [
+          'Event recaps in *48–72 hours*.',
+          'Edited galleries in *72*.',
+          'Vertical cuts ready for paid.',
+        ],
+      },
       // Reframed 2026-08-17 to the playbook's credibility strip — the same
       // three facts, but stated as what he has done rather than as a badge.
-      { id: 'proof', line: 'Toronto + GTA · Founder, Studio Impetus · Former agency DP & project manager' },
+      // Stacked into beats 2026-08-18 to match the deliver panel; the words
+      // are the strip's, unchanged.
+      {
+        id: 'proof',
+        lines: [
+          'Toronto + GTA.',
+          'Founder, Studio Impetus.',
+          'Former agency DP & project manager.',
+        ],
+      },
     ],
   },
 
@@ -119,7 +150,9 @@ export const site = {
     body: [
       "You spend the budget. The room looks incredible. Then the footage sits in an edit queue, the recap lands two or three weeks later, and by the time it's ready the campaign has moved on.",
       "The problem usually isn't the shooter. It's that nobody scoped the edit, nobody planned for vertical, and nobody was working to a deadline that matched how fast the moment actually expires.",
-      'I work backwards from the post date. Stills the same night, recap in 48–72 hours, vertical delivered alongside the horizontal — not as an afterthought when someone asks a week later.',
+      // "Stills the same night" corrected 2026-08-18 to the promise Jelani
+      // actually confirmed — the gallery is a 72-hour deliverable.
+      'I work backwards from the post date. Recap in 48–72 hours, the edited gallery in 72, vertical delivered alongside the horizontal — not as an afterthought when someone asks a week later.',
     ],
   },
 
@@ -564,7 +597,10 @@ export const site = {
         id: 'coverage',
         name: 'Event coverage',
         price: 'From $2,000 / day',
-        body: 'Video, photo, or both. Recap in 48–72 hours, stills same day. Vertical included, not extra.',
+        // "stills same day" corrected 2026-08-18 to the confirmed 72-hour
+        // gallery promise; "both" stays because the From-price plus the
+        // scoping call absorb the second-shooter booking.
+        body: 'Video, photo, or both. Recap in 48–72 hours, gallery in 72. Vertical included, not extra.',
         foot: 'Per shoot day',
         featured: false,
       },

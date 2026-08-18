@@ -93,6 +93,31 @@ function Backdrop() {
   )
 }
 
+/**
+ * Stage copy renders as stacked beats, one per line, with the `*…*` span
+ * from site.ts picked out in gold. The parser is deliberately dumb — split
+ * on the marker, odd parts are gold — so the copy file stays plain text.
+ */
+function StageLines({ lines }: { lines: readonly string[] }) {
+  return (
+    <>
+      {lines.map((line) => (
+        <span key={line} className="block">
+          {line.split('*').map((part, i) =>
+            i % 2 === 1 ? (
+              <span key={i} className="text-gold">
+                {part}
+              </span>
+            ) : (
+              <Fragment key={i}>{part}</Fragment>
+            ),
+          )}
+        </span>
+      ))}
+    </>
+  )
+}
+
 export function Hero() {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLElement>(null)
@@ -213,7 +238,7 @@ export function Hero() {
             >
               <div className="shell flex h-full items-center">
                 <p className="max-w-3xl text-2xl font-semibold leading-snug tracking-tight text-paper sm:text-4xl">
-                  {deliver?.line}
+                  {deliver && <StageLines lines={deliver.lines} />}
                 </p>
               </div>
             </motion.div>
@@ -225,7 +250,7 @@ export function Hero() {
               <div className="shell flex h-full items-center">
                 <div className="max-w-3xl">
                   <p className="text-2xl font-semibold leading-snug tracking-tight text-paper sm:text-4xl">
-                    {proof?.line}
+                    {proof && <StageLines lines={proof.lines} />}
                   </p>
                   <div className="mt-9">
                     <GoldLink href="#contact">{site.hero.primary}</GoldLink>

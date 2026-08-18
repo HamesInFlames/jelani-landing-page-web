@@ -60,7 +60,7 @@ test('hero renders the headline, the proof line, and both calls to action', asyn
   // without waiting on hydration or a scroll.
   await expect(
     page.getByText(
-      'Bioderma · Soluna · Canergy · Reset Studio · Camp Dreamwood · Featured on Sportsnet',
+      'Bioderma · Soluna · Canergy · Reset Studio · Kilani · Camp Dreamwood · Featured on Sportsnet',
     ),
   ).toBeVisible()
 
@@ -279,11 +279,9 @@ test('scrolling the hero swaps in the later information panels', async ({ page }
   const hero = page.locator('#top')
   const runway = await hero.evaluate((el) => el.getBoundingClientRect().height)
 
-  // Panel 3 carries the credibility strip; it must be invisible at the top
-  // and legible once the visitor has scrolled through the hero.
-  const proof = page.getByText(
-    'Toronto + GTA · Founder, Studio Impetus · Former agency DP & project manager',
-  )
+  // Panel 3 carries the credibility strip, stacked into beats; its last
+  // beat is unique to this panel, so it anchors the lookup.
+  const proof = page.getByText('Former agency DP & project manager')
   const opacityOf = async () =>
     Number(
       await proof.evaluate((el) => {
@@ -302,6 +300,13 @@ test('scrolling the hero swaps in the later information panels', async ({ page }
   await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), runway * 0.92)
   await page.waitForTimeout(700)
   expect(await opacityOf()).toBeGreaterThan(0.8)
+
+  // The same-day-stills promise was retired 2026-08-18: it contradicted
+  // the two-shooter correction of 2026-08-05 (same-day stills beside video
+  // is a second-shooter booking, and a gallery is a 72-hour promise). It
+  // had crept in under three phrasings — hero panel, sub, problem section,
+  // pricing — so the guard matches the shape, not one string.
+  expect(await page.content()).not.toMatch(/stills (?:the )?same (?:day|night)/i)
 })
 
 test('reduced motion gives a still hero, one viewport tall, with no autoplay', async ({ page }) => {
