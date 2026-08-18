@@ -76,7 +76,7 @@ test('an unconfigured deployment still delivers, through FormSubmit', async (t) 
 
   const [call] = toFormSubmit(calls)
   assert.ok(call, 'FormSubmit is in the channel list with nothing configured')
-  assert.equal(call.url, 'https://formsubmit.co/ajax/jelaniwoods@gmail.com')
+  assert.equal(call.url, 'https://formsubmit.co/ajax/xoxoksh05@gmail.com')
 
   // The relay has to arrive readable, and reply-to has to be the visitor so
   // answering the notification answers the lead.

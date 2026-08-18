@@ -23,8 +23,16 @@
  * is attempted, so a lead survives even a total delivery failure.
  */
 
-/** Where FormSubmit relays to when nothing is configured — the address the page already prints. */
-const DEFAULT_ENQUIRY_TO = 'jelaniwoods@gmail.com'
+/**
+ * Where FormSubmit relays to when nothing is configured.
+ *
+ * TEMPORARY (2026-08-18): pointed at James's address so he can complete the
+ * one-time FormSubmit activation himself and prove the pipeline end to end,
+ * rather than waiting on Jelani to tap a link in his own inbox. Once that
+ * test passes this goes back to the address the page prints publicly —
+ * 'jelaniwoods@gmail.com' — or is set per deployment via ENQUIRY_TO.
+ */
+const DEFAULT_ENQUIRY_TO = 'xoxoksh05@gmail.com'
 
 const MAX_FIELD = { email: 200, need: 80, for: 80, when: 80, note: 2000 }
 
