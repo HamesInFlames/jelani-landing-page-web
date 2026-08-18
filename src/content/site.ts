@@ -60,7 +60,13 @@ export const site = {
       { label: 'Services', href: '#services' },
       { label: 'About', href: '#about' },
     ],
-    cta: 'Book a call',
+    // "Book a call" until 2026-08-18. Jelani does not sell on a free
+    // discovery call ("I'm not wasting my time on ppl shopping around"), so
+    // a button promising one advertised the wrong product. Both this and
+    // hero.primary scroll to the enquiry card, which was always the real
+    // destination — only the label lied.
+    // CONFIRM: label wording.
+    cta: 'Start a booking',
   },
 
   hero: {
@@ -74,11 +80,21 @@ export const site = {
      * is free to break them across lines.
      */
     headline: "Your activation is over in six hours. Your content shouldn't take three weeks.",
-    // The middle clause read "stills the same day" until 2026-08-18 — the
-    // same unkeepable promise retired from panel 2 that day: Jelani's
-    // 2026-08-05 correction makes an edited gallery a 72-hour promise, and
-    // same-day stills beside video a second-shooter booking.
-    sub: 'I shoot brand activations, launches, and influencer events across the GTA — and get you a finished recap in 48–72 hours, an edited gallery in 72, and vertical cuts built for paid from the start.',
+    /**
+     * The delivery clause has been corrected twice. "Stills the same day"
+     * came off on 2026-08-18 (it clashed with the two-shooter rule), and
+     * the 72-hour numbers that replaced it came off the same evening:
+     * Jelani's real turnarounds are an edited gallery in 24 hours and a
+     * recap in 48 ("photo will always be our fastest service... it's so
+     * systematic I don't even have to think about"). Faster than that is a
+     * rush booking, priced as one — see the services blurb.
+     *
+     * Split into two sentences the same day: the clause used to hang off an
+     * em dash, and Jelani reads that punctuation as machine-written. The
+     * second sentence now opens on "You", which is the playbook's framing
+     * anyway. index.html's description mirrors this line.
+     */
+    sub: 'I shoot brand activations, launches, and influencer events across the GTA. You get a finished recap in 48 hours, an edited gallery in 24, and vertical cuts built for paid from the start.',
     /**
      * Small-type proof line under the sub. It rides the hero's CSS entrance
      * with the rest of panel 1, so it paints with the prerendered markup and
@@ -89,7 +105,8 @@ export const site = {
      * 2026-08-18) are already public.
      */
     proof: 'Bioderma · Soluna · Canergy · Reset Studio · Kilani · Camp Dreamwood · Featured on Sportsnet',
-    primary: 'Book a call',
+    // Renamed with nav.cta on 2026-08-18 — see the note there.
+    primary: 'Start a booking',
     secondary: 'See the work',
     /**
      * The hero loop — Jelani's own footage, playing muted on its own while
@@ -106,20 +123,20 @@ export const site = {
      * Each stage is a stack of short beat lines. `*…*` marks the one span
      * per line Hero.tsx renders in gold — key figures only, by brand rule.
      *
-     * Revised 2026-08-18: "Stills the same day" is retired — it contradicted
-     * the 2026-08-05 two-shooter correction (an edited gallery is a 72-hour
-     * promise, and same-day stills beside video is a second-shooter
-     * booking). The Kilani credit signed off 2026-08-05 lives in the
-     * panel-1 proof strip above; the close keeps the playbook's
-     * credibility strip.
+     * Revised twice on 2026-08-18. "Stills the same day" went first, for
+     * clashing with the two-shooter rule. Jelani then read the replacement
+     * on the deployed site and corrected the numbers themselves: galleries
+     * are 24 hours, recaps are 48. The gallery leads the panel now because
+     * it is both the faster promise and the one he is proudest of — photo
+     * is his oldest craft and the one he calls systematic.
      * CONFIRM: panels 2 and 3 remain drafted — see CONTENT-INTAKE.md §2.
      */
     stages: [
       {
         id: 'deliver',
         lines: [
-          'Event recaps in *48–72 hours*.',
-          'Edited galleries in *72*.',
+          'Edited galleries in *24 hours*.',
+          'Event recaps in *48*.',
           'Vertical cuts ready for paid.',
         ],
       },
@@ -150,9 +167,10 @@ export const site = {
     body: [
       "You spend the budget. The room looks incredible. Then the footage sits in an edit queue, the recap lands two or three weeks later, and by the time it's ready the campaign has moved on.",
       "The problem usually isn't the shooter. It's that nobody scoped the edit, nobody planned for vertical, and nobody was working to a deadline that matched how fast the moment actually expires.",
-      // "Stills the same night" corrected 2026-08-18 to the promise Jelani
-      // actually confirmed — the gallery is a 72-hour deliverable.
-      'I work backwards from the post date. Recap in 48–72 hours, the edited gallery in 72, vertical delivered alongside the horizontal — not as an afterthought when someone asks a week later.',
+      // Corrected 2026-08-18 to the turnarounds Jelani confirmed that
+      // evening: gallery in 24, recap in 48. The closing clause is its own
+      // sentence now rather than an em-dash tail.
+      'I work backwards from the post date. The edited gallery in 24 hours, the recap in 48, vertical delivered alongside the horizontal. Not as an afterthought when someone asks a week later.',
     ],
   },
 
@@ -166,7 +184,12 @@ export const site = {
     title: 'A DP who came up as a project manager.',
     body: [
       "Toronto has no shortage of good shooters. What's harder to find is someone who scopes a job honestly, shows up early, and doesn't need managing on the day.",
-      "I came up through agency production at Visual Smugglers as a project manager and a DP — so I've sat on both sides of the brief. I know what it costs an agency when a freelancer over-promises, goes quiet, and delivers late. I built how I work around not being that person.",
+      // The dash after "DP" came out 2026-08-18 at Jelani's request: "I feel
+      // like the '–' after DP is very AI coded". It was the one he named, and
+      // the tic was thinned across the page's prose in the same pass — the
+      // hero sub, the problem close, and the photo card. Dashes that land a
+      // punch stayed.
+      "I came up through agency production at Visual Smugglers as a project manager and a DP, so I've sat on both sides of the brief. I know what it costs an agency when a freelancer over-promises, goes quiet, and delivers late. I built how I work around not being that person.",
       'You get a written brief before the shoot. A real timeline, and I hit it. Horizontal and vertical from the same shoot, not a change order. And you can hand me a job and stop thinking about it.',
     ],
   },
@@ -197,8 +220,17 @@ export const site = {
   services: {
     eyebrow: 'Services',
     title: 'What I shoot, and how fast you get it back.',
+    /**
+     * The closing sentence carries Jelani's 2026-08-18 caveat, and it is the
+     * only place the page makes it: the 24/48 promises are what he delivers
+     * as standard, but a guaranteed hard deadline means clearing the next
+     * day for it ("the shoot would have to be so expensive I can take
+     * Thursday off"), and that is a different price. Stated once, here,
+     * beside the promises it qualifies. Do not hedge the cards themselves.
+     * CONFIRM: rush-booking wording.
+     */
     blurb:
-      'Four ways brands and agencies bring me in. Every one of them ends with usable footage in your hands, not a project that drags.',
+      "Four ways brands and agencies bring me in. Every one of them ends with usable footage in your hands, not a project that drags. Need it faster? A hard next-morning deadline is a rush booking, and it's priced like one.",
     // Reframed 2026-08-17 per the playbook: each card now leads with what
     // the buyer ends up with, not with what happens on the day.
     items: [
@@ -206,8 +238,8 @@ export const site = {
         n: '01',
         title: 'Event video recaps',
         body: 'The recap your team can actually run. Cut so it works as paid, not just as a nice post.',
-        // CONFIRM: turnaround commitments below are drafted, not yet approved by Jelani.
-        promise: '48–72 hours',
+        // Confirmed by Jelani 2026-08-18: "Event recaps is 48". Was 48–72.
+        promise: '48 hours',
       },
       {
         n: '02',
@@ -218,8 +250,12 @@ export const site = {
         // there's nobody on video") — same-day both means a second shooter.
         // The scoping caveat survives the 2026-08-17 reframe: it is the one
         // sentence here that stops a booking being mis-sold.
-        body: "A stills library that lasts the quarter. Social, PR, and paid can all pull from it, so you're not re-shooting product in October. Photo and video on the same day is a two-shooter booking — one camera cannot cover both — so it is scoped with a second shooter up front.",
-        promise: 'Gallery in 72 hours',
+        body: "A stills library that lasts the quarter. Social, PR, and paid can all pull from it, so you're not re-shooting product in October. Photo and video on the same day is a two-shooter booking: one camera cannot cover both, so it is scoped with a second shooter up front.",
+        // Confirmed by Jelani 2026-08-18: "Gallery in 24. Photo will always
+        // be our fastest service." Was 72 hours. The two-shooter caveat
+        // above is untouched — he sped the gallery up, he did not retract
+        // the 2026-08-05 correction.
+        promise: 'Gallery in 24 hours',
       },
       {
         n: '03',
@@ -525,31 +561,53 @@ export const site = {
     ] as WorkGroup[],
   },
 
+  /**
+   * The funnel, rebuilt 2026-08-18 on Jelani's own sequence: an intake form
+   * gathers the details, a five-to-ten-minute call takes payment and books
+   * the creative brief session. The old first step sold a free twenty-minute
+   * discovery call, which is the opposite of how he works ("This shouldn't
+   * be a call I'm not wasting my time on ppl shopping around... So we are
+   * talking money from the jump").
+   *
+   * James's call on how far to say that out loud: the page does not print
+   * "no call until you pay". Stated baldly to a first-time visitor it reads
+   * as hostile, and Jelani himself left it optional ("Ur call tho. Not
+   * important to include"). The flow carries it instead — nothing here
+   * offers a free consultation, and step 02 is explicit that payment is
+   * what holds the date. Do not re-add a "book a call" step, and do not add
+   * the rule as copy.
+   *
+   * Agencies hiring a shooter run differently; Jelani handles that himself
+   * ("I'll handle that in the moment"), so the page carries no agency path.
+   *
+   * Four steps, because Process.tsx lays them out on a four-column grid.
+   * CONFIRM: steps 01, 02, and 04 are drafted — see CONTENT-INTAKE.md §9.
+   */
   process: {
     eyebrow: 'Process',
-    title: 'From first call to final cut.',
+    title: 'From enquiry to final cut.',
     blurb:
-      'Every engagement runs the same four steps — so you know what happens next before you have paid for anything.',
+      'Every engagement runs the same four steps, so you know the price and the plan before the shoot is on the calendar.',
     steps: [
       {
         n: '01',
-        title: 'Book a call',
-        body: 'Twenty minutes on what the event is, who the content is for, and where it will run.',
+        title: 'Tell me what you need',
+        body: 'The enquiry card below: what the event is, who the content is for, and where it will run. Takes a minute.',
       },
       {
         n: '02',
+        title: 'Lock it in',
+        body: 'A ten-minute call, not a pitch. We confirm the package, payment holds your date, and your creative brief session goes in the calendar.',
+      },
+      {
+        n: '03',
         title: 'Creative brief',
         body: 'Before the shoot, you get a written brief — goal, roles, locations, talent, budget — so the day is planned, not improvised.',
       },
       {
-        n: '03',
-        title: 'Shoot day',
-        body: 'I show up early, shoot the plan, and stay on the lookout for the moments the plan could not predict.',
-      },
-      {
         n: '04',
-        title: 'Fast delivery',
-        body: 'Recaps in days, not weeks — horizontal and vertical cuts from the same shoot, ready to run.',
+        title: 'Shoot and delivery',
+        body: 'I show up early, shoot the plan, and catch the moments it could not predict. Then the cuts come back in days, not weeks, horizontal and vertical from the same shoot.',
       },
     ],
     /**
@@ -590,17 +648,26 @@ export const site = {
   pricing: {
     eyebrow: 'Pricing',
     title: 'Three ways to book me.',
+    /**
+     * REMOVED 2026-08-18 — "Where a job needs scoping, it gets scoped on the
+     * call before anyone talks money." It promised the exact sequence Jelani
+     * rejects: money comes first, and the call is where the package is
+     * confirmed and paid for, not where it is worked out for free. The
+     * house rules sentence in front of it is untouched, deliberately: that
+     * voice is the point.
+     * CONFIRM: replacement second sentence.
+     */
     blurb:
-      'Fixed packages — no discounts, no in-between quantities, no negotiation theatre. Where a job needs scoping, it gets scoped on the call before anyone talks money.',
+      'Fixed packages — no discounts, no in-between quantities, no negotiation theatre. Pick one, and a ten-minute call locks the date and the details.',
     tiers: [
       {
         id: 'coverage',
         name: 'Event coverage',
         price: 'From $2,000 / day',
-        // "stills same day" corrected 2026-08-18 to the confirmed 72-hour
-        // gallery promise; "both" stays because the From-price plus the
-        // scoping call absorb the second-shooter booking.
-        body: 'Video, photo, or both. Recap in 48–72 hours, gallery in 72. Vertical included, not extra.',
+        // Turnarounds corrected twice on 2026-08-18, ending at the numbers
+        // Jelani confirmed: gallery in 24, recap in 48. "Both" stays because
+        // the From-price plus the booking call absorb the second shooter.
+        body: 'Video, photo, or both. Recap in 48 hours, gallery in 24. Vertical included, not extra.',
         foot: 'Per shoot day',
         featured: false,
       },
@@ -630,7 +697,12 @@ export const site = {
   cta: {
     eyebrow: "Let's talk",
     title: 'Have an event coming up?',
-    sub: 'Four quick questions and I will come back to you with availability and a quote.',
+    // Rewritten 2026-08-18: this card is step 01 of the funnel, so it sets
+    // the expectation the process section now describes — a price comes
+    // back, then a short call locks the date. "Availability and a quote"
+    // read as the opening of a negotiation.
+    // CONFIRM: wording.
+    sub: "Four quick questions. I'll come back within a business day with the price and a time to lock it in.",
     steps: [
       {
         id: 'need',
@@ -667,7 +739,9 @@ export const site = {
     },
     success: {
       title: "Got it — I'll be in touch.",
-      body: 'Your note is on its way to my inbox. Expect a reply within one business day.',
+      // CONFIRM: matches the promise cta.sub makes above — a price, then a
+      // short call. Updated 2026-08-18 with the funnel.
+      body: 'Your note is on its way to my inbox. Expect a reply within one business day with the price and a time to lock your date.',
     },
     /**
      * Shown only when the send genuinely failed. The card used to fire the

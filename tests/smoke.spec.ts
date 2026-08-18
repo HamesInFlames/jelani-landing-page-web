@@ -64,7 +64,9 @@ test('hero renders the headline, the proof line, and both calls to action', asyn
     ),
   ).toBeVisible()
 
-  await expect(page.getByRole('link', { name: 'Book a call' }).first()).toHaveAttribute(
+  // Renamed from "Book a call" 2026-08-18 — Jelani does not sell on a free
+  // discovery call, so the button names what it actually starts.
+  await expect(page.getByRole('link', { name: 'Start a booking' }).first()).toHaveAttribute(
     'href',
     '#contact',
   )
@@ -301,12 +303,55 @@ test('scrolling the hero swaps in the later information panels', async ({ page }
   await page.waitForTimeout(700)
   expect(await opacityOf()).toBeGreaterThan(0.8)
 
-  // The same-day-stills promise was retired 2026-08-18: it contradicted
-  // the two-shooter correction of 2026-08-05 (same-day stills beside video
-  // is a second-shooter booking, and a gallery is a 72-hour promise). It
-  // had crept in under three phrasings — hero panel, sub, problem section,
-  // pricing — so the guard matches the shape, not one string.
-  expect(await page.content()).not.toMatch(/stills (?:the )?same (?:day|night)/i)
+  // Panel 2 leads on the gallery — the faster promise, and the one Jelani
+  // is proudest of. It is faded out at this scroll position, so this
+  // asserts the markup rather than the paint; the numbers themselves are
+  // guarded page-wide in the turnaround test below.
+  expect(await page.content()).toContain('Edited galleries in')
+})
+
+test('every turnaround promise on the page reads 24 and 48', async ({ page }) => {
+  await revealAll(page)
+
+  // Jelani corrected these on 2026-08-18 reading the deployed site: the
+  // gallery is 24 hours and the recap is 48, not the 72-hour pair that had
+  // replaced "stills the same day" that morning. The numbers appear in
+  // seven places, so a half-applied correction is the real risk — this
+  // asserts the live copy and then sweeps the whole document for every
+  // superseded phrasing, including the same-day claim retired before them.
+  await expect(page.locator('#services').getByText('Gallery in 24 hours')).toBeVisible()
+  await expect(page.locator('#services').getByText('48 hours', { exact: true })).toBeVisible()
+  await expect(
+    page.locator('#pricing').getByText('Recap in 48 hours, gallery in 24.', { exact: false }),
+  ).toBeVisible()
+  await expect(page.locator('#problem').getByText(/The edited gallery in 24 hours/)).toBeVisible()
+
+  const html = await page.content()
+  expect(html).not.toContain('48–72')
+  expect(html).not.toMatch(/galler(?:y|ies) in 72/i)
+  expect(html).not.toMatch(/stills (?:the )?same (?:day|night)/i)
+
+  // The rush caveat is stated once, beside the promises it qualifies, and
+  // nowhere else — hedging every card was the failure mode to avoid.
+  expect(html.match(/rush booking/gi) ?? []).toHaveLength(1)
+})
+
+test('the funnel never offers a free discovery call', async ({ page }) => {
+  await revealAll(page)
+
+  // Rebuilt 2026-08-18 on Jelani's own sequence: enquiry form, then a short
+  // call that takes payment and books the brief. "Book a call" and the
+  // pricing line that promised free scoping both sold the opposite, so
+  // their absence is the assertion — a copy edit that reintroduces either
+  // has reintroduced the wrong funnel.
+  const html = await page.content()
+  expect(html).not.toContain('Book a call')
+  expect(html).not.toContain('scoped on the call before anyone talks money')
+  expect(html).not.toMatch(/twenty minutes/i)
+
+  // James's call: the page implies pay-first through the flow and never
+  // prints the rule itself, which reads as hostile to a first-time visitor.
+  expect(html).not.toMatch(/calls? (?:don't|do not) happen until/i)
 })
 
 test('reduced motion gives a still hero, one viewport tall, with no autoplay', async ({ page }) => {
@@ -383,10 +428,20 @@ test('the process section walks its four steps, and nothing else', async ({ page
   await revealAll(page)
   const process = page.locator('#process')
 
-  await expect(process.getByRole('heading', { name: 'From first call to final cut.' })).toBeVisible()
-  for (const step of ['Book a call', 'Creative brief', 'Shoot day', 'Fast delivery']) {
+  await expect(process.getByRole('heading', { name: 'From enquiry to final cut.' })).toBeVisible()
+  for (const step of [
+    'Tell me what you need',
+    'Lock it in',
+    'Creative brief',
+    'Shoot and delivery',
+  ]) {
     await expect(process.getByRole('heading', { name: step })).toBeVisible()
   }
+
+  // Step 02 is where the money is named. The old first step sold twenty
+  // free minutes to anyone shopping around, which is the booking Jelani
+  // refuses to take.
+  await expect(process.getByText(/payment holds your date/)).toBeVisible()
 
   // The evidence block (brief page, shoot-day phone strip, bundle line) was
   // removed 2026-08-05. The section is the four steps now — a stray image
