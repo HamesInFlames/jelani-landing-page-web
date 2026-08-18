@@ -81,11 +81,34 @@ export const site = {
      * Information panels staged across the pinned hero. Panel 1 is the
      * prerendered first paint and carries the LCP headline; 2 and 3 arrive
      * on scroll. Under reduced motion only panel 1 shows.
-     * CONFIRM: panels 2 and 3 are drafted — see CONTENT-INTAKE.md §2.
+     *
+     * Each stage is a stack of short beat lines. `*…*` marks the one span
+     * per line Hero.tsx renders in gold — key figures only, by brand rule.
+     *
+     * Revised 2026-08-18: "Stills the same day" is retired — it contradicted
+     * the 2026-08-05 two-shooter correction (an edited gallery is a 72-hour
+     * promise, and same-day stills beside video is a second-shooter
+     * booking). The close now carries the Kilani/Raptors credit Jelani
+     * signed off 2026-08-05.
+     * CONFIRM: panels 2 and 3 remain drafted — see CONTENT-INTAKE.md §2.
      */
     stages: [
-      { id: 'deliver', line: 'Event recaps in 48–72 hours. Stills the same day. Vertical cuts ready for paid.' },
-      { id: 'proof', line: 'Sportsnet-featured. Founder of Studio Impetus. Toronto.' },
+      {
+        id: 'deliver',
+        lines: [
+          'Event recaps in *48–72 hours*.',
+          'Edited galleries in *72*.',
+          'Vertical cuts ready for paid.',
+        ],
+      },
+      {
+        id: 'proof',
+        lines: [
+          'Sportsnet-featured.',
+          'Raptors home games with Kilani.',
+          'Founder of Studio Impetus. Toronto.',
+        ],
+      },
     ],
   },
 

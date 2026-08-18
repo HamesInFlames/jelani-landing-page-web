@@ -59,13 +59,16 @@ polish the phrasing on our side without changing your meaning.
 
 _______________________________________________
 
-As you scroll, two more short lines appear over your footage. Drafts:
+As you scroll, two more short panels appear over your footage. Drafts
+(revised 2026-08-18 — "stills the same day" came out because it clashed
+with your two-shooter correction, and the close now carries the Kilani /
+Raptors credit you okayed):
 
-- Line 2 (what you deliver): *"Event recaps in 48–72 hours. Stills the same
-  day. Vertical cuts ready for paid."*
+- Panel 2 (what you deliver): *"Event recaps in 48–72 hours. Edited
+  galleries in 72. Vertical cuts ready for paid."*
   ☐ ✅ Keep  ☐ Change: ______________________________
-- Line 3 (the close): *"Sportsnet-featured. Founder of Studio Impetus.
-  Toronto."*
+- Panel 3 (the close): *"Sportsnet-featured. Raptors home games with
+  Kilani. Founder of Studio Impetus. Toronto."*
   ☐ ✅ Keep  ☐ Change: ______________________________
 
 ## 3. Client names we show (important — one tick each)

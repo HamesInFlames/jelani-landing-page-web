@@ -242,9 +242,10 @@ test('scrolling the hero swaps in the later information panels', async ({ page }
   const hero = page.locator('#top')
   const runway = await hero.evaluate((el) => el.getBoundingClientRect().height)
 
-  // Panel 3 carries the proof line; it must be invisible at the top and
-  // legible once the visitor has scrolled through the hero.
-  const proof = page.getByText('Sportsnet-featured. Founder of Studio Impetus. Toronto.')
+  // Panel 3 carries the proof beats; it must be invisible at the top and
+  // legible once the visitor has scrolled through the hero. The Kilani/
+  // Raptors beat is unique to this panel, so it anchors the lookup.
+  const proof = page.getByText('Raptors home games with Kilani')
   const opacityOf = async () =>
     Number(
       await proof.evaluate((el) => {
@@ -263,6 +264,12 @@ test('scrolling the hero swaps in the later information panels', async ({ page }
   await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), runway * 0.92)
   await page.waitForTimeout(700)
   expect(await opacityOf()).toBeGreaterThan(0.8)
+
+  // "Stills the same day" was retired 2026-08-18: it contradicted the
+  // two-shooter correction of 2026-08-05 (same-day stills beside video is
+  // a second-shooter booking, and a gallery is a 72-hour promise). The
+  // claim must not come back through a stale revert.
+  expect(await page.content()).not.toContain('Stills the same day')
 })
 
 test('reduced motion gives a still hero, one viewport tall, with no autoplay', async ({ page }) => {
