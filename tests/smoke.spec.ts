@@ -470,6 +470,7 @@ test('a failed send says so, and keeps the visitor’s answers on screen', async
   await page.getByRole('button', { name: 'Paid ads' }).click()
   await page.getByRole('button', { name: 'This month' }).click()
   await page.locator('#cta-email').fill('lead@brand.com')
+  await page.locator('#cta-phone').fill('(416) 555-0134')
   await page.locator('#cta-note').fill('Launch night, Aug 20')
 
   // The mailto handoff would navigate the page away; intercept it so the
@@ -487,7 +488,14 @@ test('a failed send says so, and keeps the visitor’s answers on screen', async
     name: 'jelaniwoods@gmail.com',
   })
   await expect(fallback).toHaveAttribute('href', 'mailto:jelaniwoods@gmail.com')
-  for (const answer of ['Event recap', 'Paid ads', 'This month', 'lead@brand.com', 'Launch night, Aug 20']) {
+  for (const answer of [
+    'Event recap',
+    'Paid ads',
+    'This month',
+    'lead@brand.com',
+    '(416) 555-0134',
+    'Launch night, Aug 20',
+  ]) {
     await expect(card.getByText(answer, { exact: true })).toBeVisible()
   }
 

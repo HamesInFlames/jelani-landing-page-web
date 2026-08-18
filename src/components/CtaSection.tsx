@@ -7,18 +7,29 @@ import { Reveal } from './ui/Reveal'
 const STEP_COUNT = site.cta.steps.length + 1
 
 /** The same shape the server relays, so both routes read identically. */
-function summarise(answers: Record<string, string>, email: string, note: string) {
+function summarise(
+  answers: Record<string, string>,
+  email: string,
+  phone: string,
+  note: string,
+) {
   return [
     { label: 'What they need', value: answers['need'] ?? '—' },
     { label: "What it's for", value: answers['for'] ?? '—' },
     { label: 'Timing', value: answers['when'] ?? '—' },
     { label: 'Reply to', value: email },
+    { label: 'Phone', value: phone || '(not given)' },
     { label: 'Note', value: note || '(no additional note)' },
   ]
 }
 
-function buildMailto(answers: Record<string, string>, email: string, note: string) {
-  const lines = summarise(answers, email, note)
+function buildMailto(
+  answers: Record<string, string>,
+  email: string,
+  phone: string,
+  note: string,
+) {
+  const lines = summarise(answers, email, phone, note)
     .filter((line) => line.label !== 'Note')
     .map((line) => `${line.label}: ${line.value}`)
 
@@ -33,6 +44,7 @@ export function CtaSection() {
   const [dir, setDir] = useState(1)
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [note, setNote] = useState('')
   // Honeypot: hidden from real visitors, irresistible to form bots. The
   // server drops any submission that fills it.
@@ -62,7 +74,7 @@ export function CtaSection() {
         const res = await fetch(FORM_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ ...answers, email, note, company }),
+          body: JSON.stringify({ ...answers, email, phone, note, company }),
         })
         // Success is a 2xx from our own server and nothing else: that is
         // the only response that means a channel actually took the lead.
@@ -79,7 +91,7 @@ export function CtaSection() {
     // desktop — but it silently does nothing on most phones, so the card
     // says what happened instead of showing a tick it did not earn, and
     // keeps every answer on screen to be copied out.
-    window.location.href = buildMailto(answers, email, note)
+    window.location.href = buildMailto(answers, email, phone, note)
     setStatus('failed')
   }
 
@@ -107,8 +119,11 @@ export function CtaSection() {
         <Reveal delay={0.1}>
           <div className="card mx-auto mt-12 max-w-xl p-7 sm:p-10">
             {/* Floor is sized to the tallest step (the final form) so the
-                card never resizes as the visitor moves through it. */}
-            <div className="grid min-h-[21rem] grid-rows-[auto_1fr]">
+                card never resizes as the visitor moves through it. Raised
+                from 21rem when the optional phone field was added — the
+                final step grew by an input, and the e2e height assertion
+                catches this if it is ever left behind again. */}
+            <div className="grid min-h-[25.5rem] grid-rows-[auto_1fr]">
               <div className="flex items-center justify-between gap-4 pb-8">
                 <div className="flex items-center gap-2" aria-hidden="true">
                   {Array.from({ length: STEP_COUNT }).map((_, i) => (
@@ -186,7 +201,7 @@ export function CtaSection() {
                           {site.cta.failure.answersLabel}
                         </p>
                         <dl className="text-sm">
-                          {summarise(answers, email, note).map((line) => (
+                          {summarise(answers, email, phone, note).map((line) => (
                             <div key={line.label} className="mt-3 flex flex-wrap gap-x-2">
                               <dt className="text-muted">{line.label}:</dt>
                               <dd className="text-paper">{line.value}</dd>
@@ -254,6 +269,28 @@ export function CtaSection() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder={site.cta.final.emailPlaceholder}
+                            className="w-full rounded-xl border border-[var(--hairline-strong)] bg-ink px-4 py-3 text-paper placeholder:text-muted/70 focus:border-gold focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="cta-phone" className="sr-only">
+                            {site.cta.final.phoneLabel}
+                          </label>
+                          {/* type/inputMode/autoComplete together get a phone
+                              keypad and the browser's stored number on mobile,
+                              where most of this traffic is. Deliberately not
+                              validated: formats vary, extensions exist, and
+                              rejecting an odd-but-real number costs a lead on
+                              a field that is optional anyway. */}
+                          <input
+                            id="cta-phone"
+                            type="tel"
+                            inputMode="tel"
+                            autoComplete="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder={site.cta.final.phonePlaceholder}
                             className="w-full rounded-xl border border-[var(--hairline-strong)] bg-ink px-4 py-3 text-paper placeholder:text-muted/70 focus:border-gold focus:outline-none"
                           />
                         </div>

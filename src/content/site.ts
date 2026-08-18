@@ -619,6 +619,12 @@ export const site = {
       question: 'Where can I reach you?',
       emailLabel: 'Your email',
       emailPlaceholder: 'you@company.com',
+      // Optional on purpose. A phone number closes an event booking faster
+      // than email does, but requiring it costs leads from anyone who will
+      // not hand a number to a site they have just met — so it is offered,
+      // never demanded. Email stays the one required field.
+      phoneLabel: 'Phone (optional)',
+      phonePlaceholder: '(416) 555-0134',
       noteLabel: 'Anything else? (optional)',
       notePlaceholder: 'Event date, location, what you have in mind…',
       submit: 'Send it',

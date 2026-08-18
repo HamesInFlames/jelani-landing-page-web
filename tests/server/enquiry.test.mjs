@@ -353,3 +353,39 @@ test('with no Origin header the origin is rebuilt from the forwarded host', asyn
   assert.equal(headers.Origin, 'https://jelaniwoods.up.railway.app')
   assert.equal(headers.Referer, 'https://jelaniwoods.up.railway.app/')
 })
+
+test('an optional phone number reaches every channel, and its absence is explicit', async (t) => {
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, body: JSON.parse(init.body) })
+    return formSubmitOk
+  })
+
+  const handler = await loadHandler({ ENQUIRY_WEBHOOK_URL: 'https://hooks.example.com/x' })
+  await handler(req({ email: 'lead@brand.com', phone: '(416) 555-0134' }), fakeRes())
+
+  assert.equal(toFormSubmit(calls)[0].body.Phone, '(416) 555-0134')
+  assert.equal(toWebhook(calls)[0].body.phone, '(416) 555-0134')
+  assert.match(toWebhook(calls)[0].body.text, /Phone: \(416\) 555-0134/)
+
+  // Left blank, the relay says so rather than showing an empty line that
+  // reads as a rendering fault.
+  calls.length = 0
+  const handler2 = await loadHandler({ ENQUIRY_WEBHOOK_URL: 'https://hooks.example.com/x' })
+  await handler2(req({ email: 'lead@brand.com' }), fakeRes())
+  assert.equal(toFormSubmit(calls)[0].body.Phone, '(not given)')
+  assert.match(toWebhook(calls)[0].body.text, /Phone: \(not given\)/)
+})
+
+test('an overlong phone number is capped rather than relayed whole', async (t) => {
+  const calls = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url, body: JSON.parse(init.body) })
+    return formSubmitOk
+  })
+
+  const handler = await loadHandler()
+  await handler(req({ email: 'lead@brand.com', phone: '9'.repeat(500) }), fakeRes())
+
+  assert.equal(toFormSubmit(calls)[0].body.Phone.length, 40)
+})

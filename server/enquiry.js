@@ -34,7 +34,7 @@
  */
 const DEFAULT_ENQUIRY_TO = 'xoxoksh05@gmail.com'
 
-const MAX_FIELD = { email: 200, need: 80, for: 80, when: 80, note: 2000 }
+const MAX_FIELD = { email: 200, phone: 40, need: 80, for: 80, when: 80, note: 2000 }
 
 // One visitor, one enquiry, is the normal case; the allowance is set well
 // above that so a genuine second thought never hits a wall, and far below
@@ -74,6 +74,7 @@ function format(enquiry) {
     `What it's for: ${enquiry.for || '—'}`,
     `Timing: ${enquiry.when || '—'}`,
     `Reply to: ${enquiry.email}`,
+    `Phone: ${enquiry.phone || '(not given)'}`,
     '',
     enquiry.note || '(no additional note)',
   ].join('\n')
@@ -160,6 +161,7 @@ async function postFormSubmit(enquiry, origin) {
       "What it's for": enquiry.for || '—',
       Timing: enquiry.when || '—',
       Email: enquiry.email,
+      Phone: enquiry.phone || '(not given)',
       Note: enquiry.note || '(no additional note)',
     }),
     signal: AbortSignal.timeout(8000),
@@ -236,6 +238,9 @@ export function enquiryHandler(req, res) {
 
   const enquiry = {
     email: clean(payload.email, MAX_FIELD.email),
+    // Optional: offered because a number closes an event booking faster,
+    // never required, and never validated — see the card for why.
+    phone: clean(payload.phone, MAX_FIELD.phone),
     need: clean(payload.need, MAX_FIELD.need),
     // Added with the qualifying step in the card ("What's the content
     // for?") — it is the field that tells Jelani how to quote.
