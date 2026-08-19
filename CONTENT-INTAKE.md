@@ -125,6 +125,16 @@ you raised is stated once, in the Services intro:
 
 ☐ ✅ Keep  ☐ Change: ______________________________
 
+**Your Mexico story is now on the photo card**, because "gallery in 24
+hours" is a claim and this is the proof that makes a buyer believe it:
+> I've left a shoot in Mexico at 10am and had the gallery ready to upload
+> before the plane landed.
+
+We kept it to exactly what you said — *ready to upload*, not uploaded from
+the plane. This is the one line on the site where overstating by a word
+would cost you, so it needs your tick rather than ours.
+☐ ✅ Keep  ☐ Change: ______________________________
+
 The photo card still carries the two-shooter caveat you gave us on
 2026-08-05, now that the gallery is faster:
 > Photo and video on the same day is a two-shooter booking: one camera

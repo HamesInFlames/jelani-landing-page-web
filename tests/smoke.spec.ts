@@ -334,6 +334,13 @@ test('every turnaround promise on the page reads 24 and 48', async ({ page }) =>
   // The rush caveat is stated once, beside the promises it qualifies, and
   // nowhere else — hedging every card was the failure mode to avoid.
   expect(html.match(/rush booking/gi) ?? []).toHaveLength(1)
+
+  // Jelani's own proof for the 24-hour gallery. It must stay his claim:
+  // the gallery was ready to upload when he landed, not uploaded mid-air.
+  await expect(
+    page.locator('#services').getByText(/ready to upload before the plane landed/),
+  ).toBeVisible()
+  expect(html).not.toMatch(/uploaded (?:it )?before the plane landed/i)
 })
 
 test('the funnel never offers a free discovery call', async ({ page }) => {

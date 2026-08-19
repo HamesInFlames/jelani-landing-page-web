@@ -250,7 +250,17 @@ export const site = {
         // there's nobody on video") — same-day both means a second shooter.
         // The scoping caveat survives the 2026-08-17 reframe: it is the one
         // sentence here that stops a booking being mis-sold.
-        body: "A stills library that lasts the quarter. Social, PR, and paid can all pull from it, so you're not re-shooting product in October. Photo and video on the same day is a two-shooter booking: one camera cannot cover both, so it is scoped with a second shooter up front.",
+        // The Mexico line is Jelani's own proof, added 2026-08-18 from the
+        // same messages that sped the gallery up. The 24-hour promise is a
+        // claim; this is the evidence that makes it credible, and it is his
+        // strongest photo flex ("photo will always be our fastest service...
+        // I'm a demon on that"). Kept to his exact claim — the gallery was
+        // *ready to upload*, not uploaded from the air — because inflating a
+        // turnaround story is the one way this sentence could cost him.
+        // It sits before the scoping caveat so the caveat still closes the
+        // card: that sentence is what stops a booking being mis-sold.
+        // CONFIRM: exact wording, since it is a public turnaround claim.
+        body: "A stills library that lasts the quarter. Social, PR, and paid can all pull from it, so you're not re-shooting product in October. I've left a shoot in Mexico at 10am and had the gallery ready to upload before the plane landed. Photo and video on the same day is a two-shooter booking: one camera cannot cover both, so it is scoped with a second shooter up front.",
         // Confirmed by Jelani 2026-08-18: "Gallery in 24. Photo will always
         // be our fastest service." Was 72 hours. The two-shooter caveat
         // above is untouched — he sped the gallery up, he did not retract
